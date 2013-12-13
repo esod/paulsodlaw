@@ -1,0 +1,60 @@
+.buy{
+    background: url('../images/buynow.gif') no-repeat;
+    width:77px; height:23px;
+}
+.form-item {
+    margin-bottom: 1em;
+    margin-top: 1em;
+    width:450px;
+    float:left;
+}
+#edit-hdflvplayer-width-wrapper .description{
+    font-size: 0.85em;
+    float:right;
+    margin-right: 105px !important;
+}
+#edit-hdflvplayer-buffer-time-wrapper .description{
+    font-size: 0.85em;
+    float:right;
+    margin-right: 120px !important;
+}
+#edit-hdflvplayer-height-wrapper .description{
+    font-size: 0.85em;
+    float:right;
+    margin-right: 100px !important;
+}
+#edit-hdflvplayer-volume-wrapper .description{
+    font-size: 0.85em;
+    float:right;
+    margin-right: 125px !important;
+}
+.form-item .description {
+    font-size: 0.85em;
+    float:right;
+    margin-right: 0px !important;
+}
+.form-item label {
+    display: block;
+    font-weight: bold;
+    width:160px;
+    float:left;
+    clear: both;
+}
+.form-checkboxes, .form-radios, .form-checkboxes .form-item, .form-radios .form-item {
+    margin: 0px !important;
+}
+.form-radios lable{
+    width:200px;
+    float:right;
+}
+.form-radios div{
+    width: 100px !important;
+}
+#edit-hdflvplayer-logo-url-wrapper{
+    clear: both;
+}
+#edit-hdflvplayer-login-link-wrapper{
+    clear: both;
+}
+
+

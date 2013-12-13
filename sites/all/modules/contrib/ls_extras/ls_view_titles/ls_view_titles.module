@@ -1,0 +1,26 @@
+<?php
+// $Id:
+// Language Sections View Titles module for Drupal.
+// License: http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+// Support: Commercial support and customization is available from www.netgenius.co.uk
+// Contact: www.netgenius.co.uk/contact or email drupal at netgenius.co.uk
+
+/*
+ * Hook our function into View processing.
+ */
+function ls_view_titles_views_pre_view(&$view, $display_id, $args) {
+
+  // Loop through current and default display referencing the fields we need.
+  $displays = array(&$view->display['default'], &$view->display[$display_id]);
+  foreach($displays as $display) {
+    $options =& $display->handler->options;
+    if ($options['title'])  $display_title =& $options['title'];
+    if ($options['header']) $display_options = $options;
+  }
+
+  // If header found...
+  if (isset($display_options)) {
+    $title = ls_titles_process('get', $display_options['header'], $display_options['header_format']);
+    if ($title != '!')  $display_title = $title;
+  }
+}

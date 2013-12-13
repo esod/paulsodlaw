@@ -1,0 +1,15 @@
+; $Id:
+name = Language Sections View Titles
+description = Set View titles from Language Sections.
+version = 6.x-1.x-dev
+package = "Multilanguage"
+core = 6.x
+dependencies[] = ls_titles
+dependencies[] = views
+
+; Information added by drupal.org packaging script on 2010-04-20
+version = "6.x-1.8"
+core = "6.x"
+project = "ls_extras"
+datestamp = "1271768108"
+

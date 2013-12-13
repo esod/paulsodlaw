@@ -1,0 +1,64 @@
+.form-item{
+    margin-bottom: 0em;
+    margin-top: 0em;
+    width:900px;
+}
+.form-item label{
+    display: block;
+    font-weight: bold;
+    width:120px;
+    float:left;
+}
+.form-checkboxes, .form-radios, .form-checkboxes .form-item, .form-radios .form-item {
+    margin: 0px !important;
+}
+.resizable-textarea .grippie {
+    border:none;
+    background:none;
+}
+#edit-hdflvplayer-google-code-wrapper{
+    padding: 10px 0px;
+    width:800px;
+    clear:both;
+}
+#edit-hdflvplayer-google-showoption-1-wrapper{
+    width:110px;
+    float:left;
+}
+#edit-hdflvplayer-google-showoption-2-wrapper{
+    width:110px;
+    float:left;
+}
+#edit-hdflvplayer-google-closeadd{
+    width:80px;
+    float:left;
+}
+#edit-hdflvplayer-google-closeadd-wrapper{
+    width: 110px;
+    float:left;
+
+}
+#edit-hdflvplayer-google-closeadd-wrapper label{
+    float:right;
+    margin-right: 100px;
+}
+#edit-hdflvplayer-google-ropen{
+    float:left;
+}
+#edit-hdflvplayer-google-reopenadd-wrapper{
+    float:left;
+    padding-left: 20px;
+    width: 120px;
+}
+#edit-hdflvplayer-google-ropen-wrapper{
+    float:right;
+    width:100px;
+    padding-right: 210px;
+}
+.description{
+    float:right;
+}
+.clear{
+    clear: both;
+}
+

@@ -1,0 +1,80 @@
+<?php
+// $Id: gmapez.module,v 1.2 2009/06/09 18:36:45 berend Exp $
+
+/*
+ * Implementation of hook_perm
+ */
+function gmapez_perm() {
+  return array('administer gmapez');
+}
+
+
+/*
+ * Implementation of hook_menu
+ */
+function gmapez_menu () {
+  $items['admin/settings/gmapez'] = array(
+    'title' => t('GMapEZ'),
+    'description' => t('Configure the GMapEZ module.'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('gmapez_admin_settings'),
+    'access arguments' => array('administer gmapez'));
+  return $items;
+}
+
+
+/*
+ * Add script to every page, except admin pages.
+ */
+function gmapez_init () {
+  if (arg(0) != 'admin' && variable_get('gmapez_always', 1)) {
+    gmapez_add_script();
+  }
+}
+
+
+/*
+ * Add the gmapez script
+ */
+function gmapez_add_script () {
+  static $initialized = 0;
+  if (! $initialized) {
+    $key = variable_get('gmapez_gmapkey', 'ABQIAAAAVBWrZTQWTeQ_EA-QxCBdXBT2yXp_ZAY8_ufC3CFXhHIE1NvwkxQ8GMDInMeMDuMjCUi2ppmV64EOcw');
+    drupal_set_html_head('<meta name="gmapkey" content="'. $key .'" />');
+    drupal_add_js (drupal_get_path('module', 'gmapez') . '/gmapez-2.5-improved.js');
+    $initialized = 1;
+  }
+}
+
+
+/*
+ * Admin form
+ */
+function gmapez_admin_settings() {
+  // Restrict administration of this module
+  if (!user_access('administer gmapez')) {
+    $form["error"] = array('#type' => 'item',
+      '#title' => t('You are not authorized to access the gmapez settings.'));
+    return system_settings_form($form);
+  }
+
+  $form["general"]["gmapez_gmapkey"] = array(
+    '#type' => 'textfield',
+    '#title' => t('Google Map key'),
+    '#size' => 86,
+    '#maxlength' => 86,
+    '#default_value' => variable_get('gmapez_gmapkey', 'ABQIAAAAVBWrZTQWTeQ_EA-QxCBdXBT2yXp_ZAY8_ufC3CFXhHIE1NvwkxQ8GMDInMeMDuMjCUi2ppmV64EOcw'),
+    '#description' => t('Your Google Map key. If invalid, you can <a target="blank" href="http://code.google.com/apis/maps/signup.html">create a new one</a>.'));
+  $form["general"]["gmapez_always"] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Always add GMapez to a page'),
+    '#size' => 86,
+    '#maxlength' => 86,
+    '#default_value' => variable_get('gmapez_always', 1),
+    '#description' => t('Sometimes slow, but allows any user to add a map in their content.'));
+
+  $form['link-back'] = array (
+    '#value' => '<p><a href="http://n01se.net/gmapez/"><img alt="Powered By GMapEZ" src="http://gmapez.googlepages.com/poweredbygmapez.jpg" style="width:73px;height:25px;border:none;" /></a></p>');
+
+  return system_settings_form($form);
+}

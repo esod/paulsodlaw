@@ -1,0 +1,121 @@
+/* $Id: maintenance-page.css $ */
+
+/**
+ * @file
+ * maintenance-page.css
+ */
+ 
+div#site-name.maintenance-site-name, 
+div#site-name.maintenance-site-name a /* The name of the website */
+  {
+  color:#FFFFFF;
+  line-height: 26px;
+  margin:18px 0px 4px 10px;
+}
+
+/*
+ * Content
+ */
+
+h1.maintenance-title, /* The title of the page */
+h2.title, /* Block title or the title of a piece of content when it is given in a list of content */
+h3.title /* Comment title */ {
+  margin: 72px 0 0 72px;
+  font-size: 24px;
+}
+
+/*
+ * maintenance-page-offline
+ */
+#maintenance-content .maintenance-section {
+  width: 756px;
+}
+
+
+#maintenance-content-area /* Wrapper for the actual page content */ {
+  margin: 0 0 0 72px;
+}
+
+#content .maintenance-section {
+  margin-top: 48px;
+  color: #192666;
+}
+
+/*
+ * Footer
+ */
+
+#footer {
+  height: 60px;
+  margin-top:48px;
+  padding:5px 10px;
+  border-top:1px solid #a0b9f3;
+  background-color:#FFFFFF;
+}
+
+.linkedin-logo
+  {
+	background-image: url(../icons/small/icon-linkedin.png);
+	background-repeat:no-repeat;
+	padding: 6px 28px 9px;
+}
+  
+#maintenance-directions {
+  margin: 0 48px 0 24px;
+  font-size:12px;
+  font-weight: normal;
+  float: right;
+}
+
+#maintenance-footer-wrapper {
+  margin-top: 12px;
+}
+
+#maintenance-directions a:hover {
+  color:#FF9000;
+}
+
+#footer .section {
+}
+
+#footer-message /* Wrapper for the footer message from Drupal's "Site information"
+                   and for any blocks placed in the footer region */ {
+}
+
+.region-footer {
+}
+
+/*
+ * Closure
+ */
+.regi/*
+on-page-closure /* Wrapper for any blocks placed in the closure region */ {
+}
+
+/*
+ * Markup free clearing (See: http://www.positioniseverything.net/easyclearing.html )
+ */
+.clearfix:after {
+  content: ".";
+  display: block;
+  height: 0;
+  clear: both;
+  visibility: hidden;
+}
+
+/*
+ * maintenance-page-offline
+ */
+h1#maintenance-site-name, 
+div#maintenance-site-name, 
+h1#maintenance-site-name a, 
+div#maintenance-site-name a {
+    color: #FFFFFF;
+    font-size: 24px;
+    font-weight: bold;
+    line-height: 26px;
+    margin: 0 0 4px 10px;
+    padding-top: 27px;
+}
+
+

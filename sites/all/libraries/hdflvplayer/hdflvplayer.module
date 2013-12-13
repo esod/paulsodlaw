@@ -1,0 +1,1626 @@
+<?php
+
+// $Id: hdflvplayer.module.inc,v 1.0 Created by Vasanth at 2010/01/10 10:23:11 Exp $
+/*
+ * This file is model file here we have to mention the menus, database functions etc.
+ */
+/* * ***********************************************HDFLV PLAYER MODULE PERMISSION ********************************************************************* */
+/*
+ * we have to give permission for hdflvplayer using the values of array.
+ */
+function hdflvplayer_perm() {
+    return array('view hdflvplayer');
+}
+
+/* * ************************************************HDFLV PLAYER MODULE MENUS ************************************************************************** */
+
+function hdflvplayer_menu() {
+
+    /* Hdflv management Main Menu */
+
+    $items['admin/hdflvplayer'] = array(
+        'title' => 'HDFLV management',
+        'description' => "Manage your site's users, groups and access to site features.",
+        'position' => 'left',
+        'page callback' => 'system_admin_menu_block_page',
+        'access arguments' => array('view hdflvplayer'),
+        'file' => 'system.admin.inc',
+        'file path' => drupal_get_path('module', 'system'),
+    );
+
+    /* Sub menus of Hdflv management ->Manage Videos */
+
+    $items['admin/hdflvplayer/videos/list'] = array(
+        'title' => 'Manage Videos',
+        'description' => 'List, add, and edit videos.',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('hdflvplayer_listvideos_form'),
+        'access arguments' => array('aview hdflvplayer'),
+        'file' => 'hdflvplayer_listvideos.inc',
+    );
+
+    /* Sub menus of Manage Videos ->Add Videos */
+
+    $items['admin/hdflvplayer/videos/addvideo'] = array(
+        'title' => 'Add Videos',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('hdflvplayer_addvideos_form', 'add'),
+        'access arguments' => array('view hdflvplayer'),
+        'type' => MENU_CALLBACK,
+        'file' => 'hdflvplayer_addvideos.inc',
+    );
+
+    /* Sub menus of Manage Videos ->delete video */
+    /*
+     * Only callback does not display in view(ui).
+     * /% is used to pass values through url.
+     */
+
+    $items['admin/hdflvplayer/videos/delete/%'] = array(
+        'page callback' => 'hdflvplayer_delete_video',
+        'page arguments' => array(0, 4),
+        'access arguments' => array('view hdflvplayer'),
+        'type' => MENU_CALLBACK,
+    );
+
+    /* Sub menus of Manage Videos -> Edit video */
+
+    $items['admin/hdflvplayer/videos/editvideo'] = array(
+        'title' => 'Edit Videos',
+        'description' => 'HDFLVPlayer Video edit.',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('hdflvplayer_video_edit_form', 4),
+        'access arguments' => array('view hdflvplayer'),
+        'type' => MENU_CALLBACK,
+        'file' => 'hdflvplayer_editvideos.inc',
+    );
+
+    /* Sub menus of Hdflv management ->playlist */
+
+    $items['admin/hdflvplayer/videos/playlist'] = array(
+        'title' => 'Playlist',
+        'description' => 'HDFLVPlayer Playlist.',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('hdflvplayer_playlist_form'),
+        'access arguments' => array('view hdflvplayer'),
+        'file' => 'hdflvplayer_playlist.inc',
+    );
+
+    /* Sub menus of playlist ->Add playlist */
+
+    $items['admin/hdflvplayer/videos/addplaylist'] = array(
+        'title' => 'Add Playlist',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('hdflvplayer_addplaylist_form', 'add'),
+        'access arguments' => array('view hdflvplayer'),
+        'type' => MENU_CALLBACK,
+        'file' => 'hdflvplayer_addplaylist.inc',
+    );
+
+    /* Sub menus of playlist ->delete playlist */
+
+    $items['admin/hdflvplayer/videos/deleteplaylist/%'] = array(
+        'page callback' => 'hdflvplayer_delete_playlist',
+        'page arguments' => array(0, 4),
+        'access arguments' => array('view hdflvplayer'),
+        'type' => MENU_CALLBACK,
+    );
+
+    /* Sub menus of playlist -> Edit playlist */
+
+    $items['admin/hdflvplayer/videos/editplaylist'] = array(
+        'title' => 'Edit Playlist',
+        'description' => 'HDFLVPlayer Video edit.',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('hdflvplayer_playlist_edit_form', 4),
+        'access arguments' => array('view hdflvplayer'),
+        'type' => MENU_CALLBACK,
+        'file' => 'hdflvplayer_editplaylist.inc',
+    );
+
+
+    /* Sub menus of Hdflv management ->Ads */
+
+    $items['admin/hdflvplayer/videos/ads'] = array(
+        'title' => 'Ads',
+        'description' => 'HDFLV Player Ads.',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('hdflvplayer_ads_form'),
+        'access arguments' => array('view hdflvplayer'),
+        'file' => 'hdflvplayer_ads.inc',
+    );
+
+    /* Sub menus of Ads ->Add Ads */
+
+    $items['admin/hdflvplayer/videos/addads'] = array(
+        'title' => 'Add Ads',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('hdflvplayer_addads_form', 'add'),
+        'access arguments' => array('view hdflvplayer'),
+        'type' => MENU_CALLBACK,
+        'file' => 'hdflvplayer_addads.inc',
+    );
+
+    /* Sub menus of Ads ->delete Ads */
+
+    $items['admin/hdflvplayer/videos/deleteads/%'] = array(
+        'page callback' => 'hdflvplayer_delete_ads',
+        'page arguments' => array(0, 4),
+        'access arguments' => array('view hdflvplayer'),
+        'type' => MENU_CALLBACK,
+    );
+
+    /* Upload ->videos */
+
+    $items['admin/hdflvplayer/videos/uploadvideo'] = array(
+        'page callback' => 'hdflvplayer_upload_video',
+        'page arguments' => array(0, 4),
+        'access arguments' => array('view hdflvplayer'),
+        'type' => MENU_CALLBACK,
+    );
+
+    /* Upload ->Hd videos */
+
+    $items['admin/hdflvplayer/videos/uploadhd'] = array(
+        'page callback' => 'hdflvplayer_upload_hd',
+        'page arguments' => array(0, 4),
+        'access arguments' => array('view hdflvplayer'),
+        'type' => MENU_CALLBACK,
+    );
+
+    /* Upload ->Thumb */
+
+    $items['admin/hdflvplayer/videos/uploadthumb'] = array(
+        'page callback' => 'hdflvplayer_upload_thumb',
+        'page arguments' => array(0, 4),
+        'access arguments' => array('view hdflvplayer'),
+        'type' => MENU_CALLBACK,
+    );
+
+    /* Upload ->roll */
+
+    $items['admin/hdflvplayer/videos/uploadroll'] = array(
+        'page callback' => 'hdflvplayer_upload_roll',
+        'page arguments' => array(0, 4),
+        'access arguments' => array('view hdflvplayer'),
+        'type' => MENU_CALLBACK,
+    );
+    /* Sub menus of Ads -> Edit Ads */
+
+    $items['admin/hdflvplayer/videos/editads'] = array(
+        'title' => 'Edit Ads',
+        'description' => 'HDFLVPlayer Video edit.',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('hdflvplayer_ads_edit_form', 4),
+        'access arguments' => array('view hdflvplayer'),
+        'type' => MENU_CALLBACK,
+        'file' => 'hdflvplayer_editads.inc',
+    );
+
+
+
+    /* Sub menus of Hdflv management ->Page Settings */
+
+    $items['admin/hdflvplayer/videos/content'] = array(
+        'title' => 'Page Settings',
+        'description' => 'Settings for the HDFLVPlayer in content Page.',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('hdflvplayer_page_settings'),
+        'access arguments' => array('view hdflvplayer'),
+    );
+
+    /* Sub menus of Hdflv management ->Player settings */
+
+    $items['admin/hdflvplayer/settings'] = array(
+        'title' => 'Player settings',
+        'description' => 'Configure default behavior of Player.',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('hdflvplayer_admin_settings'),
+        'access arguments' => array('view hdflvplayer'),
+        'file' => 'hdflvplayer_admin.inc',
+    );
+
+    /* Sub menus of Hdflv management ->Language settings */
+
+    $items['admin/hdflvplayer/language'] = array(
+        'title' => 'Language settings',
+        'description' => 'Configure language of Player.',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('hdflvplayer_admin_language'),
+        'access arguments' => array('view hdflvplayer'),
+        'file' => 'hdflvplayer_admin.inc',
+    );
+
+    /* Sub menus of Hdflv management ->Google ad sense */
+
+    $items['admin/hdflvplayer/google'] = array(
+        'title' => 'Google AdSense',
+        'description' => 'Configure google Adsense.',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('hdflvplayer_admin_addsense'),
+        'access arguments' => array('view hdflvplayer'),
+        'file' => 'hdflvplayer_admin.inc',
+    );
+
+    /* Menu links for Call the function show player
+     * Config,playlist.language, etc for call the particular function.
+     * Here we cant call th function through url.
+     * So we can create the url link tat will Stroed in db menulink and menurouter table.
+     * we can call function using this tite of menu through url.
+     */
+
+    /* Main Menu page go to player */
+
+    /* Main Menu page go to player */
+
+    $menu_base = variable_get("hdflvplayer_menu_base", "hdflvplayer-gallery");
+
+    $items["$menu_base"] = array(
+        "title" => "HD FLV Player",
+        "page callback" => "hdflvplayer_display_main",
+        "access arguments" => array("view hdflvplayer"),
+        "type" => MENU_NORMAL_ITEM,
+    );
+
+    $items["$menu_base/%"] = array(
+        "page callback" => "hdflvplayer_display_main",
+        "page arguments" => array(1, 2),
+        "access arguments" => array("view hdflvplayer"),
+        "type" => MENU_CALLBACK,
+    );
+
+    /* Configuration url path */
+    $items['node/hdflvplayer-config'] = array(
+        'page callback' => 'hdflvplayer_config',
+        'page arguments' => array(0, 1),
+        'access arguments' => array('view hdflvplayer'),
+        'type' => MENU_CALLBACK,
+    );
+    /* Configuration url path */
+    $items['node/%/hdflvplayer-config_id'] = array(
+        'page callback' => 'hdflvplayer_config_id',
+        'page arguments' => array(0, 1),
+        'access arguments' => array('view hdflvplayer'),
+        'type' => MENU_CALLBACK,
+    );
+
+    /* Playlist url path */
+    $items['node/playlist'] = array(
+        'page callback' => 'hdflvplayer_playlist',
+        'page arguments' => array(0, 1),
+        'access arguments' => array('view hdflvplayer'),
+        'type' => MENU_CALLBACK,
+    );
+    /* get video id */
+    $items['node/%/videoid'] = array(
+        'page callback' => 'hdflvplayer_playlist_get_video',
+        'page arguments' => array(0, 1),
+        'access arguments' => array('view hdflvplayer'),
+        'type' => MENU_CALLBACK,
+    );
+    /* google adsense url path */
+    $items['node/googleads'] = array(
+        'page callback' => 'hdflvplayer_googlescript',
+        'page arguments' => array(0, 1),
+        'access arguments' => array('view hdflvplayer'),
+        'type' => MENU_CALLBACK,
+    );
+    /* Playlist by page url path */
+    $items['node/%/playlist_id'] = array(
+        'page callback' => 'hdflvplayer_playlist_id',
+        'page arguments' => array(0, 1),
+        'access arguments' => array('view hdflvplayer'),
+        'type' => MENU_CALLBACK,
+    );
+
+    /* Ads url path */
+
+    $items['node/hdflvplayer-ads'] = array(
+        'page callback' => 'hdflvplayer_ads',
+        'page arguments' => array(0, 1),
+        'access arguments' => array('view hdflvplayer'),
+        'type' => MENU_CALLBACK,
+    );
+
+    /* Language url path */
+
+    $items['node/hdflvplayer-language'] = array(
+        'page callback' => 'hdflvplayer_language',
+        'page arguments' => array(0, 1),
+        'access arguments' => array('view hdflvplayer'),
+        'type' => MENU_CALLBACK,
+    );
+
+    return $items;
+}
+
+/* * ***********************************************DISPLAY PLAYER IN MAIN PAGE (gallery)********************************************************************************** */
+
+function hdflvplayer_display_main($bool_block_mode = false, $pid=null) {
+
+    /* Update View Count */
+    if ($bool_block_mode != '') {
+
+        $resultCount = db_query('SELECT id,times_viewed FROM {hdflvplayerupload} where id="' . $bool_block_mode . '"');
+
+        $resultCounts = db_fetch_array($resultCount);
+
+        $count = $resultCounts['times_viewed'] + 1;
+
+        $id = $resultCounts['id'];
+
+        db_query("update {hdflvplayerupload} SET times_viewed = '" . $count . "' where id='" . $id . "'");
+
+        drupal_set_title(t(''));
+    }
+    /*
+
+      This is the main landing page for anyone trying to look at the gallery.
+
+      It will show available Playlist.
+
+     */
+    drupal_add_css(drupal_get_path('module', 'hdflvplayer') . '/style/hdflvplayermain.css');
+    drupal_add_js(drupal_get_path('module', 'hdflvplayer') . '/js/jquery-1.3.2.js', 'external', 'footer');
+    drupal_add_js(drupal_get_path('module', 'hdflvplayer') . '/js/jquery.tipsy.js', 'external', 'footer');
+    drupal_add_js(drupal_get_path('module', 'hdflvplayer') . '/js/upload_script.js', 'external', 'footer');
+
+    drupal_add_css(drupal_get_path('module', 'hdflvplayer') . '/style/tipsy.css');
+
+    /* Assign $rtn for return the player */
+
+    $rtn = "";
+
+    drupal_add_js(drupal_get_path("module", "hdflvplayer") . "/js/swfobject.js");
+    drupal_add_js(drupal_get_path("module", "hdflvplayer") . "/js/main.js");
+    drupal_add_js(drupal_get_path('module', 'hdflvplayer') . '/js/googleadds.js', 'external', 'footer');
+
+    /* Check googleadsense is enabled or not. */
+
+    if (variable_get('hdflvplayer_google_puplished', '') == '1' && variable_get('hdflvplayer_google_showoption', '') == '2') {
+        $closeadd = variable_get('hdflvplayer_google_closeadd', '');
+        $ropen = variable_get('hdflvplayer_google_ropen', '');
+    } else {
+        $closeadd = 0;
+        $ropen = 0;
+    }
+
+    /* pass the closeadd and reopenadd time to googleadds.js */
+
+    $rtn = "<script language='javascript'>
+
+    var closeadd = $closeadd * 1000;
+
+    var ropen = $ropen * 1000;
+
+</script>";
+
+// Display available Playlist...
+
+    $width = variable_get('hdflvplayer_width', '');
+
+    $height = variable_get('hdflvplayer_height', '');
+
+    $modulePath = url() . drupal_get_path("module", "hdflvplayer") . "/hdflvplayer/hdplayer.swf";
+
+    /* Retrive title and Discription. if description is enabled. */
+
+    if (variable_get('hdflvplayer_description', 0) == 'true') {
+
+        if ($bool_block_mode != '' && $pid == '') {
+
+            $result = db_query('SELECT id,title,description FROM {hdflvplayerupload} where id="' . $bool_block_mode . '"');
+        } else if ($bool_block_mode != '' && $pid != '') {
+
+            $result = db_query('SELECT id,title,description FROM {hdflvplayerupload} where id="' . $bool_block_mode . '" AND playlistid="' . $pid . '"');
+        } else {
+
+            $result = db_query('SELECT id,title,description FROM {hdflvplayerupload} ORDER BY id DESC');
+        }
+
+        while ($rows = db_fetch_object($result)) {
+            if ($bool_block_mode != '') {
+                $id = $bool_block_mode;
+            } else {
+                $id = $rows->id;
+            }
+            $description = $rows->description;
+            if (variable_get('hdflvplayer_title', 0) == 'true') {
+                $title = $rows->title;
+            } else {
+                $title = '';
+            }
+        }
+
+        /* Set configuration path */
+
+        global $base_url;
+
+        $configPath = $base_url;
+
+
+        //assign Title Above the Player.
+
+        drupal_set_title(t(""));
+
+        /* Get playlist for select box. */
+
+        $playlist = hdflvplayer_playlist_get_configs();
+
+        if ($playlist != '') {
+
+            foreach ($playlist as $key => $play) {
+
+                if ($key == $pid) {
+
+                    $playKey = "value='$key' selected=selected";
+                } else {
+
+                    $playKey = "value='$key'";
+                }
+                $playList .= '<option ' . $playKey . '>' . $play . '</option>';
+            }
+        }
+
+        /* Assign Dynamic width for topplayer Div. */
+
+        $width = variable_get('hdflvplayer_width', 0);
+
+        $widthTopplayer = $width . 'px;';
+
+        $rtn .="<div id='topplayer' style='width:$widthTopplayer' class='clearfix'><div id='video_title'>$title</div>
+        <div id='category'><lable id='select_title'>Choose Category / Playlist :&nbsp;&nbsp;&nbsp;</lable>
+        <select id='playlist_id' onchange='playlistname(this.value)'><option value=''>All Playlist</option>' . $playList . '</select></div></div>";
+
+// Player.
+
+        $rtn .= "<div name='mediaspace' id='mediaspace' class='mediaspace'>
+                    <script type='text/javascript'>
+                              var s1 = new SWFObject('$modulePath','player',$width,$height,'9');
+                              s1.addParam('allowfullscreen','true');
+                              s1.addParam('allowscriptaccess','always');";
+
+        if ($bool_block_mode == '') {
+
+            $rtn .= " s1.addParam('flashvars','baserefD=$configPath');";
+        } else if ($bool_block_mode != '' && $pid != '') {
+
+            $rtn .= "  s1.addParam('flashvars','baserefD=$configPath&vid=$bool_block_mode&pid=$pid');";
+        } else {
+
+            $rtn .= "  s1.addParam('flashvars','baserefD=$configPath&vid=$bool_block_mode');";
+        }
+
+        $rtn .= "  s1.addParam('wmode','transparent');
+                              s1.write('mediaspace');
+                     </script>
+                  </div>";
+
+        /* Display Google Adsense. */
+
+        $src_path = url() . 'sites/all/modules/hdflvplayer/images/close.png';
+
+        if (variable_get('hdflvplayer_google_puplished', '') == '1') {
+
+            $rtn .="<div id='lightm'  style='width:468px;height:60px;position:absolute;background-color:#FFFFFF;display:none;'>
+
+    <span id='divimgm' ><img id='closeimgm' src='$src_path' style=' width:48px;height:12px;cursor:pointer;position:absolute;top:-8px;left:420px;' onclick='googleclose();'></span>
+
+    <iframe height='60' scrolling='no' align='middle' width='468' id='IFrameName' src=''     name='IFrameName' marginheight='0' marginwidth='0' frameborder='0'></iframe>
+
+</div>";
+        } else {
+            $rtn .="<div id='lightm'style='display:none !important;'>
+                <img id='closeimgm' src='' style='display:none !important;'>
+                <iframe height='60' scrolling='no' align='middle' width='468' id='IFrameName' src=''     name='IFrameName' marginheight='0' marginwidth='0' frameborder='0' style='display:none !important;'></iframe>
+   </div>";
+        }
+
+        /* Display Description. Set Dynamic width for description div. */
+
+        $width = variable_get('hdflvplayer_width', 0);
+
+        $widthStatic = ($width - 3) . 'px';
+
+        $rtn .= "<div id='descrption' style='width:$widthStatic;border: 1px solid #CCC;'><div style='width:$widthStatic;background-color:#CCC;'><stong>Description</strong>
+                  <span class='up'>Up</span><span class='down'>Down</span></div>
+                    <p id='descriptionp'>$description</p>
+                </div>";
+    }
+
+    /* Related Videos. */
+
+    if (variable_get('hdflvplayer_related', 0) == 1 || variable_get('hdflvplayer_related', 0) == 4) {
+
+        $rtn .= "<div id='title' style='margin-top:10px;'>Related Videos</div>";
+    }
+    if ($pid != '') {
+
+        $result = db_query('SELECT id,title,description,filepath,thumburl,times_viewed,playlistid FROM {hdflvplayerupload} where published = 1 AND playlistid="' . $pid . '"');
+    } else {
+
+        $result = db_query('SELECT id,title,description,filepath,thumburl,times_viewed,playlistid FROM {hdflvplayerupload} where published = 1');
+    }
+    $related = array();
+    $rtn .= "<div id='thumb_total' style='width: $widthStatic' class='clearfix'>";
+
+    /* Assign $i = 0; for toop change tip position based upon that width. */
+
+    $i = 0;
+
+    while ($rows = db_fetch_object($result)) {
+
+        $results = db_query('SELECT name FROM {hdflvplayer_playlist} where playid="' . $rows->playlistid . '"');
+
+        $result1 = db_fetch_array($results);
+
+        if ($result1['name'] == '') {
+            $result1['name'] = "None";
+        }
+        $category = $result1['name'];
+
+        if ($rows->filepath == 'youtube' || $rows->filepath == 'url') {
+
+            $src_path = $rows->thumburl;
+        } elseif ($rows->filepath == 'upload') {
+            $fileName = urldecode($rows->thumburl);
+            $src_path = url() . 'sites/default/files/hdflvplayer/thumb/' . $fileName;
+        }
+
+        if ($pid != '') {
+
+            $playlistId = '/' . $pid;
+        } else {
+
+            $playlistId = '';
+        }
+
+        $path = url() . 'hdflvplayer-gallery/' . $rows->id . $playlistId;
+
+        /* check Related videos is enable or not. */
+
+        if (variable_get('hdflvplayer_related', 0) == 1 || variable_get('hdflvplayer_related', 0) == 4) {
+            $description = ($rows->description);
+            $desc = htmlspecialchars(substr($description, 0, 65) . '.....');
+            $tit = substr($rows->title, 0, 18) . '.....';
+            $title = substr($rows->title, 0, 20);
+
+            /* Calculation for tooltip positioning. and assign the script values. */
+
+            $thumbWidth = '166';
+
+            $totlaWidth = $width;
+
+            $thumbCount = floor($totlaWidth / $thumbWidth);
+
+            if ($i == $thumbCount - 1) {
+
+                $i = 0;
+
+                $script = "<script type='text/javascript'>
+                         $(function() {
+                         $.fn.tipsy.defaults = {
+                         fade: false,
+                         fallback: '',
+                         gravity: 'e',
+                         html: true,
+                         title: 'title'
+                         };
+                           });
+                            $(function() {
+                             $('.east').tipsy({html: true });
+                             });
+                    </script>";
+
+                $class = "class = 'east'";
+            } else {
+
+                $i++;
+
+                $script = "<script type='text/javascript'>
+                         $(function() {
+                         $.fn.tipsy.defaults = {
+                         fade: false,
+                         fallback: '',
+                         gravity: 'w',
+                         html: true,
+                         title: 'title'
+                         };  });
+
+                            $(function() {
+                             $('.west').tipsy({html: true });
+                             });
+                    </script>";
+                $class = "class = 'west';";
+            }
+
+            /* Display Related Videos. */
+
+            $rtn .= "$script<div id=\"thumb\">
+    <div id=\"thumb_title\">
+        <a href=\"$path\">$title</a>
+    </div>
+    <div id=\"thumb_im\" >
+        <a id=\"thumb_img\" $class href=\"$path\" title=\"<div id='tool'><div id='toolTittle'>$tit</div>
+                    <div id='toolCategory'><b>Category &nbsp;&nbsp;:</b> $category</div><div id='toolDesc'><b>Description :</b> $desc</div></div>\">
+               <img  src=\"$src_path\">
+                    </a>
+            <div id=\"thumb_view\"><b>No of Views :</b> $rows->times_viewed</div></div>";
+            $rtn .=" </div>";
+        }
+    }
+    $rtn .=" </div>";
+    return $rtn;
+}
+
+/* * ***********************************************CONFIG XML********************************************************************************** */
+/*
+ * configuration for total gallery.
+ */
+
+function hdflvplayer_config($type, $path, $id=null, $pid=null) {
+
+    /* Retrive the values from database variable table. */
+
+    $licenseKey = variable_get('hdflvplayer_key', '');
+    $autoplay = variable_get('hdflvplayer_autoplay', '');
+    $playlistOpen = variable_get('hdflvplayer_playlistopen', '');
+    $bufferTime = variable_get('hdflvplayer_buffer_time', '');
+    $normalScale = variable_get('hdflvplayer_normal_scale', '');
+    $fullScreencale = variable_get('hdflvplayer_full_scale', '');
+    $logoPath = variable_get('hdflvplayer_logo', '');
+    $logoTarget = variable_get('hdflvplayer_logo_url', '');
+    $logoAlign = variable_get('hdflvplayer_logo_position', '');
+    $logoAlpha = variable_get('hdflvplayer_logo_alpha', '');
+    $volume = variable_get('hdflvplayer_volume', '');
+    $prerollAds = variable_get('hdflvplayer_preroll', '');
+    $postrollAds = variable_get('hdflvplayer_postroll', '');
+    $hdDefault = variable_get('hdflvplayer_hd', '');
+    $randomAds = variable_get('hdflvplayer_random', '');
+    $ads = variable_get('hdflvplayer_ads', '');
+    $download = variable_get('hdflvplayer_download', '');
+    if (variable_get('hdflvplayer_related', 0) == 1 || variable_get('hdflvplayer_related', 0) == 3) {
+        $showPlaylist = 'true';
+    } else {
+        $showPlaylist = 'false';
+    }
+    $skinAutohide = variable_get('hdflvplayer_skinautohide', '');
+    $stagecolor = variable_get('hdflvplayer_stage_color', '');
+    $playlist = variable_get('hdflvplayer_playlist', '');
+    $empeded = variable_get('hdflvplayer_embed', '');
+    $timer = variable_get('hdflvplayer_timer', '');
+    $zoom = variable_get('hdflvplayer_zoom', '');
+    $fullScreen = variable_get('hdflvplayer_fullscreen', '');
+    $share = variable_get('hdflvplayer_share', '');
+    $vastPartnerid = variable_get('hdflvplayer_vast_partner', '');
+    $vast = variable_get('hdflvplayer_vast', '');
+    $youtubeLogo = variable_get('hdflvplayer_youtube_logo', '');
+
+    /* get skin path fom js folder */
+    $baseUrl = url() . drupal_get_path("module", "hdflvplayer");
+    $skinPath = $baseUrl . '/hdflvplayer/skin/' . variable_get('hdflvplayer_skin', '');
+    $shareUrl = $baseUrl . '/hdflvplayer/email.php';
+    if ($pid != '' && $id != '') {
+        $playlistXML = url() . 'node/playlist/' . $id . '/' . $pid;
+    } elseif ($id != '') {
+        $playlistXML = url() . 'node/playlist/' . $id;
+    } else {
+        $playlistXML = url() . 'node/playlist/';
+    }
+    $languageXML = url() . 'node/hdflvplayer-language';
+    $adXML = url() . 'node/hdflvplayer-ads';
+    $midrollXML = $baseUrl . '/hdflvplayer/xml/midroll.xml';
+    $cssURL = $baseUrl . '/hdflvplayer/css/midrollformat.css';
+    $videoshareURL = $baseUrl . '/hdflvplayer/videourl.php';
+
+    /* Create config xml file for hdflv player */
+
+    ob_clean();
+    header("content-type:text/xml;charset=utf-8");
+    $xml = '<?xml version="1.0" encoding="utf-8"?>';
+    $xml .= '<config
+                license = "' . $licenseKey . '"
+                stagecolor = "' . $stagecolor . '"
+                autoplay = "' . $autoplay . '"
+                buffer = "' . $bufferTime . '"
+                Volume = "' . $volume . '"
+                fullscreenscale = "' . $fullScreencale . '"
+                normalscale = "' . $normalScale . '"
+                logopath = "' . $logoPath . '"
+                logoalpha = "' . $logoAlpha . '"
+                logoalign = "' . $logoAlign . '"
+                Download = "' . $download . '"
+                logo_target = "' . $logoTarget . '"
+                skin = "' . $skinPath . '"
+                skin_autohide = "' . $skinAutohide . '"
+                languageXML = "' . $languageXML . '"
+                playlistXML = "' . $playlistXML . '"
+                playlist_open = "' . $playlistOpen . '"
+                showPlaylist = "' . $showPlaylist . '"
+                HD_default = "' . $hdDefault . '"
+                vast = "' . $vast . '"
+                vast_partnerid = "' . $vastPartnerid . '"
+                streamer = ""
+                adXML = "' . $adXML . '"
+                preroll_ads = "' . $prerollAds . '"
+                postroll_ads = "' . $postrollAds . '"
+                midrollXML = "' . $midrollXML . '"
+                midroll_ads = "' . $ads . '"
+                cssURL = "' . $cssURL . '"
+                shareURL = "' . $shareUrl . '"
+                scaleToHideLogo = "' . $youtubeLogo . '"
+                embed_visible = "' . $empeded . '"
+                UseYouTubeApi = "flash"
+                videoshareURL = "' . $videoshareURL . '"
+                debug="true">';
+    $xml .= '<timer>' . $timer . '</timer>';
+    $xml .= '<zoom>' . $zoom . '</zoom>';
+    $xml .= '<email>' . $share . '</email>';
+    $xml .= '<fullscreen>' . $fullScreen . '</fullscreen>';
+    $xml .= '</config>';
+    echo $xml;
+    exit;
+}
+
+/* * ***********************************************CONFIG XML BY PAGE********************************************************************************** */
+/*
+ * configuration for pages.
+ */
+
+function hdflvplayer_config_id($type, $id) {
+
+    /* Retrive the values from database variable table. */
+
+    $licenseKey = variable_get('hdflvplayer_key', '');
+    $autoplay = variable_get('hdflvplayer_autoplay', '');
+    $playlistOpen = variable_get('hdflvplayer_playlistopen', '');
+    $bufferTime = variable_get('hdflvplayer_buffer_time', '');
+    $normalScale = variable_get('hdflvplayer_normal_scale', '');
+    $fullScreencale = variable_get('hdflvplayer_full_scale', '');
+    $logoPath = variable_get('hdflvplayer_logo', '');
+    $logoTarget = variable_get('hdflvplayer_logo_url', '');
+    $logoAlign = variable_get('hdflvplayer_logo_position', '');
+    $logoAlpha = variable_get('hdflvplayer_logo_alpha', '');
+    $volume = variable_get('hdflvplayer_volume', '');
+    $prerollAds = variable_get('hdflvplayer_preroll', '');
+    $postrollAds = variable_get('hdflvplayer_postroll', '');
+    $hdDefault = variable_get('hdflvplayer_hd', '');
+    $randomAds = variable_get('hdflvplayer_random', '');
+    $ads = variable_get('hdflvplayer_ads', '');
+    $download = variable_get('hdflvplayer_download', '');
+    if (variable_get('hdflvplayer_related', 0) == 1 || variable_get('hdflvplayer_related', 0) == 3) {
+        $showPlaylist = 'true';
+    } else {
+        $showPlaylist = 'false';
+    }
+    $skinAutohide = variable_get('hdflvplayer_skinautohide', '');
+    $stagecolor = variable_get('hdflvplayer_stage_color', '');
+    $playlist = variable_get('hdflvplayer_playlist', '');
+    $empeded = variable_get('hdflvplayer_embed', '');
+    $timer = variable_get('hdflvplayer_timer', '');
+    $zoom = variable_get('hdflvplayer_zoom', '');
+    $fullScreen = variable_get('hdflvplayer_fullscreen', '');
+    $share = variable_get('hdflvplayer_share', '');
+    $vastPartnerid = variable_get('hdflvplayer_vast_partner', '');
+    $vast = variable_get('hdflvplayer_vast', '');
+    $youtubeLogo = variable_get('hdflvplayer_youtube_logo', '');
+
+    /* get skin path fom js folder */
+    $baseUrl = url() . drupal_get_path("module", "hdflvplayer");
+    $skinPath = $baseUrl . '/hdflvplayer/skin/' . variable_get('hdflvplayer_skin', '');
+    $shareUrl = $baseUrl . '/hdflvplayer/email.php';
+    $playlistXML = url() . 'node/' . $id . '/playlist_id';
+    $languageXML = url() . 'node/hdflvplayer-language';
+    $adXML = url() . 'node/hdflvplayer-ads';
+    $midrollXML = $baseUrl . '/hdflvplayer/xml/midroll.xml';
+    $cssURL = $baseUrl . '/hdflvplayer/css/midrollformat.css';
+    $videoshareURL = $baseUrl . '/hdflvplayer/videourl.php';
+
+    /* Create config xml file for hdflv player */
+
+    ob_clean();
+    header("content-type:text/xml;charset=utf-8");
+    $xml = '<?xml version="1.0" encoding="utf-8"?>';
+    $xml .= '<config
+                license = "' . $licenseKey . '"
+                stagecolor = "' . $stagecolor . '"
+                autoplay = "' . $autoplay . '"
+                buffer = "' . $bufferTime . '"
+                Volume = "' . $volume . '"
+                fullscreenscale = "' . $fullScreencale . '"
+                normalscale = "' . $normalScale . '"
+                logopath = "' . $logoPath . '"
+                logoalpha = "' . $logoAlpha . '"
+                logoalign = "' . $logoAlign . '"
+                Download = "' . $download . '"
+                logo_target = "' . $logoTarget . '"
+                skin = "' . $skinPath . '"
+                skin_autohide = "' . $skinAutohide . '"
+                languageXML = "' . $languageXML . '"
+                playlistXML = "' . $playlistXML . '"
+                playlist_open = "' . $playlistOpen . '"
+                showPlaylist = "' . $showPlaylist . '"
+                HD_default = "' . $hdDefault . '"
+                vast = "' . $vast . '"
+                vast_partnerid = "' . $vastPartnerid . '"
+                streamer = ""
+                adXML = "' . $adXML . '"
+                preroll_ads = "' . $prerollAds . '"
+                postroll_ads = "' . $postrollAds . '"
+                midrollXML = "' . $midrollXML . '"
+                midroll_ads = "' . $ads . '"
+                cssURL = "' . $cssURL . '"
+                shareURL = "' . $shareUrl . '"
+                scaleToHideLogo = "' . $youtubeLogo . '"
+                embed_visible = "' . $empeded . '"
+                UseYouTubeApi = "flash"
+                videoshareURL = "' . $videoshareURL . '"
+                debug = "true">';
+    $xml .= '<timer>' . $timer . '</timer>';
+    $xml .= '<zoom>' . $zoom . '</zoom>';
+    $xml .= '<email>' . $share . '</email>';
+    $xml .= '<fullscreen>' . $fullScreen . '</fullscreen>';
+    $xml .= '</config>';
+    echo $xml;
+    exit;
+}
+
+/* * ***********************************************PLAYLIST XML********************************************************************************** */
+/*
+ * playlist for total gallery.
+ */
+
+function hdflvplayer_playlist($type, $path, $id=null, $pid=null) {
+
+//retrive the videos from database.
+
+    if ($id != '' && $pid == '') {
+        $playAll = db_query('SELECT * FROM {hdflvplayerupload} where published = 1 AND id="' . $id . '"');
+    } else if ($pid != '' && $id == '') {
+
+        $playAll = db_query('SELECT * FROM {hdflvplayerupload} where published = 1 AND playlistid = "' . $pid . '"');
+    } else if ($id != '' && $pid != '') {
+
+        $playAll = db_query('SELECT * FROM {hdflvplayerupload} where published = 1 AND playlistid = "' . $pid . '"');
+    } else {
+        $playAll = db_query('SELECT * FROM {hdflvplayerupload} where published = 1');
+    }
+    $playlistAutoplay = variable_get('hdflvplayer_autoplay', '');
+
+    /* Create playlist xml file for hdflv player */
+
+    ob_clean();
+    header("content-type: text/xml");
+    echo '<?xml version="1.0" encoding="utf-8"?>';
+    echo '<playlist autoplay="' . $playlistAutoplay . '">';
+    if ($playAll) {
+        while ($rows = db_fetch_object($playAll)) {
+            $count = count($rows);
+            if ($rows->hdurl != '') {
+                $hdVideo = "true";
+            } else {
+                $hdVideo = "false";
+            }
+            if ($rows->prerollads == '0') {
+                $preRoll = "false";
+            } elseif ($rows->prerollads == '1') {
+                $preRoll = "true";
+            }
+            if ($rows->postrollads == '0') {
+                $postRoll = "false";
+            } elseif ($rows->postrollads == '1') {
+                $postRoll = "true";
+            }
+            if ($rows->filepath == 'upload') {
+                $videoPath = url() . 'sites/default/files/hdflvplayer/videos/' . $rows->videourl;
+                if ($rows->hdurl != '') {
+                    $hdPath = url() . 'sites/default/files/hdflvplayer/hdvideos/' . $rows->hdurl;
+                    $hd = "hdpath = '$hdPath'";
+                } else {
+                    $hd = "hdpath = ''";
+                }
+                $thumbPath = url() . 'sites/default/files/hdflvplayer/thumb/' . $rows->thumburl;
+                $previewPath = url() . 'sites/default/files/hdflvplayer/thumb/' . $rows->previewurl;
+            } else {
+                $videoPath = $rows->videourl;
+                $hdPath = $rows->hdurl;
+                $hd = "hdpath= ''";
+                $thumbPath = $rows->thumburl;
+                $previewPath = $rows->previewurl;
+            }
+
+            if ($rows->download == '1') {
+                $allowDownload = 'true';
+            } else {
+                $allowDownload = 'false';
+            }
+            echo '<mainvideo  url = "' . $videoPath . '" Preview = "' . $previewPath . '"  ' . $hd . '  thu_image = "' . $thumbPath . '"  hd = "' . $hdVideo . '"
+        isLive = "' . $rows->islive . '" allow_download = "' . $allowDownload . '" preroll_id = "' . $rows->prerollid . '" postroll_id = "' . $rows->postrollid . '"
+            postroll = "' . $postRoll . '" preroll = "' . $preRoll . '" streamer = "' . $rows->streamername . '"  id = "' . $rows->id . '">';
+            echo '<title>';
+            echo '<![CDATA[' . $rows->title . ']]>';
+            echo '</title>';
+            echo '<tagline targeturl="' . $targeturl . '">';
+
+            if ($rows->description != "")
+                echo '<![CDATA[' . $rows->description . ']]>';
+
+            echo '</tagline>';
+
+            echo '</mainvideo>';
+        }
+    }
+    echo '</playlist>';
+
+    exit();
+}
+
+/* * ***********************************************PLAYLIST XML********************************************************************************** */
+/*
+ * playlist for pages.
+ */
+
+function hdflvplayer_playlist_id($type, $id) {
+
+    $node_config = unserialize(db_result(db_query('SELECT config FROM {hdflvplayer_node} WHERE nid = %d', $id)));
+
+    // replace any of the profile data with the node configuration data.
+
+    if ($node_config) {
+        foreach ($node_config as $key => $value) {
+            $config[$key] = $value;
+        }
+        $playlistId = $config['player_playlistid'];
+        $videoId = $config['player_videoid'];
+        if ($playlistId != '' && $videoId != '') {
+            $playResult = db_query('SELECT * FROM {hdflvplayerupload} where published = 1 AND playlistid="' . $playlistId . '" AND id="' . $videoId . '"');
+        } else if ($playlistId != '' && $videoId == '') {
+            $playResult = db_query('SELECT * FROM {hdflvplayerupload} where published = 1 AND playlistid="' . $playlistId . '"');
+        } else if ($playlistId == '' && $videoId != '') {
+            $playResult = db_query('SELECT * FROM {hdflvplayerupload} where published = 1 AND id="' . $videoId . '"');
+        } else if ($playlistId == '' && $videoId == '') {
+            $playResult = db_query('SELECT * FROM {hdflvplayerupload} where published = 1');
+        }
+    }
+
+
+    //retrive the videos from database.
+
+    $playlistAutoplay = variable_get('hdflvplayer_autoplay', '');
+
+    /* Create config xml file for hdflv player */
+
+    ob_clean();
+    header("content-type: text/xml");
+    echo '<?xml version="1.0" encoding="utf-8"?>';
+    echo '<playlist autoplay="' . $playlistAutoplay . '">';
+
+    while ($rows = db_fetch_object($playResult)) {
+
+        if ($rows->filepath == 'upload') {
+            $videoPath = url() . 'sites/default/files/hdflvplayer/videos/' . $rows->videourl;
+            if ($rows->hdurl != '') {
+                $hdPath = url() . 'sites/default/files/hdflvplayer/hdvideos/' . $rows->hdurl;
+                $hd = "hdpath= '$hdPath'";
+            } else {
+                $hd = "hdpath= ''";
+            }
+            $thumbPath = url() . 'sites/default/files/hdflvplayer/thumb/' . $rows->thumburl;
+            $previewPath = url() . 'sites/default/files/hdflvplayer/thumb/' . $rows->previewurl;
+        } else {
+            $videoPath = $rows->videourl;
+                $hdPath = $rows->hdurl;
+                $hd = "hdpath= ''";
+                $thumbPath = $rows->thumburl;
+                $previewPath = $rows->previewurl;
+        }
+
+        if ($rows->hdurl != '') {
+            $hdVideo = "true";
+        } else {
+            $hdVideo = "false";
+        }
+        if ($rows->prerollads == '0') {
+            $preRoll = "false";
+        } elseif ($rows->prerollads == '1') {
+            $preRoll = "true";
+        }
+        if ($rows->postrollads == '0') {
+            $postRoll = "false";
+        } elseif ($rows->postrollads == '1') {
+            $postRoll = "true";
+        }
+        if ($rows->download == '1') {
+            $allowDownload = 'true';
+        } else {
+            $allowDownload = 'false';
+        }
+        echo '<mainvideo  url = "' . $videoPath . '" Preview = "' . $previewPath . '"  ' . $hd . '  thu_image = "' . $thumbPath . '"  hd = "' . $hdVideo . '"
+        isLive = "' . $rows->islive . '" allow_download = "' . $allowDownload . '" preroll_id = "' . $rows->prerollid . '" postroll_id = "' . $rows->postrollid . '"
+            postroll = "' . $postRoll . '" preroll = "' . $preRoll . '" streamer = "' . $rows->streamername . '"  id = "' . $rows->id . '">';
+        echo '<title>';
+        echo '<![CDATA[' . $rows->title . ']]>';
+        echo '</title>';
+        echo '<tagline targeturl = "' . $targeturl . '">';
+
+        if ($rows->description != "")
+            echo '<![CDATA[' . $rows->description . ']]>';
+
+        echo '</tagline>';
+        echo '</mainvideo>';
+    }
+    echo '</playlist>';
+
+    exit();
+}
+
+/* * ***********************************************ADS XML********************************************************************************** */
+
+function hdflvplayer_ads() {
+
+    /*
+     * Retrive the Ads from database.and create ads xml.
+     */
+
+    $result = db_query('select * from {hdflvplayerads} where published=1');
+
+    $clickPath = '';
+
+    $impressionPath = '';
+
+    $random = variable_get('hdflvplayer_ads', '');
+
+    ob_clean();
+    header("content-type: text/xml");
+    echo '<?xml version="1.0" encoding="utf-8"?>';
+    echo '<ads random="' . $random . '">';
+
+    while ($rows = db_fetch_object($result)) {
+        if ($rows->filepath == 'upload') {
+            $postVideo = url() . 'sites/default/files/hdflvplayer/ads/' . $rows->postvideopath;
+        } else if ($rows->filepath == 'roll') {
+            $postVideo = $rows->postvideopath;
+        }
+        echo '<ad id="' . $rows->id . '" url="' . $postVideo . '" targeturl="' . $rows->targeturl . '" clickurl="' . $clickPath . '" impressionurl="' . $impressionPath . '">';
+        echo '<![CDATA[' . $rows->adsname . ']]>';
+        echo '</ad>';
+    }
+    echo '</ads>';
+
+    exit();
+}
+
+/* * ***********************************************LANGUAGE XML********************************************************************************** */
+
+function hdflvplayer_language() {
+    /*
+     * Retrive the language from database.and create language xml.
+     */
+    ob_clean();
+    header("content-type: text/xml");
+    echo '<?xml version="1.0" encoding="utf-8"?>';
+    echo '<language>';
+    echo'<play>';
+    echo '<![CDATA[' . variable_get('hdflvplayer_language_play', '') . ']]>';
+    echo '</play>';
+    echo '<pause>';
+    echo '<![CDATA[' . variable_get('hdflvplayer_language_pause', '') . ']]>';
+    echo '</pause>';
+    echo '<hdison>';
+    echo '<![CDATA[' . variable_get('hdflvplayer_language_hdison', '') . ']]>';
+    echo '</hdison>';
+    echo '<hdisoff>';
+    echo '<![CDATA[' . variable_get('hdflvplayer_language_hdisoff', '') . ']]>';
+    echo '</hdisoff>';
+    echo '<zoom>';
+    echo '<![CDATA[' . variable_get('hdflvplayer_language_zoom', '') . ']]>';
+    echo '</zoom>';
+    echo'<share>';
+    echo '<![CDATA[' . variable_get('hdflvplayer_language_share', '') . ']]>';
+    echo '</share>';
+    echo'<fullscreen>';
+    echo '<![CDATA[' . variable_get('hdflvplayer_language_fullscreen', '') . ']]>';
+    echo '</fullscreen>';
+    echo'<relatedvideos>';
+    echo '<![CDATA[' . variable_get('hdflvplayer_language_relatedvideos', '') . ']]>';
+    echo '</relatedvideos>';
+    echo'<sharetheword>';
+    echo '<![CDATA[' . variable_get('hdflvplayer_language_sharetheword', '') . ']]>';
+    echo '</sharetheword>';
+    echo'<sendanemail>';
+    echo '<![CDATA[' . variable_get('hdflvplayer_language_sendanemail', '') . ']]>';
+    echo '</sendanemail>';
+    echo'<to>';
+    echo '<![CDATA[' . variable_get('hdflvplayer_language_to', '') . ']]>';
+    echo '</to>';
+    echo'<from>';
+    echo '<![CDATA[' . variable_get('hdflvplayer_language_from', '') . ']]>';
+    echo '</from>';
+    echo'<note>';
+    echo '<![CDATA[' . variable_get('hdflvplayer_language_note', '') . ']]>';
+    echo '</note>';
+    echo'<send>';
+    echo '<![CDATA[' . variable_get('hdflvplayer_language_send', '') . ']]>';
+    echo '</send>';
+    echo'<copylink>';
+    echo '<![CDATA[' . variable_get('hdflvplayer_language_copylink', '') . ']]>';
+    echo '</copylink>';
+    echo'<copyembed>';
+    echo '<![CDATA[' . variable_get('hdflvplayer_language_copyembed', '') . ']]>';
+    echo '</copyembed>';
+    echo'<facebook>';
+    echo '<![CDATA[' . variable_get('hdflvplayer_language_facebook', '') . ']]>';
+    echo '</facebook>';
+    echo'<reddit>';
+    echo '<![CDATA[' . variable_get('hdflvplayer_language_reddit', '') . ']]>';
+    echo '</reddit>';
+    echo'<friendfeed>';
+    echo '<![CDATA[' . variable_get('hdflvplayer_language_friendfeed', '') . ']]>';
+    echo '</friendfeed>';
+    echo'<slashdot>';
+    echo '<![CDATA[' . variable_get('hdflvplayer_language_slashdot', '') . ']]>';
+    echo '</slashdot>';
+    echo'<delicious>';
+    echo '<![CDATA[' . variable_get('hdflvplayer_language_delicious', '') . ']]>';
+    echo '</delicious>';
+    echo'<myspace>';
+    echo '<![CDATA[' . variable_get('hdflvplayer_language_myspace', '') . ']]>';
+    echo '</myspace>';
+    echo'<wong>';
+    echo '<![CDATA[' . variable_get('hdflvplayer_language_wong', '') . ']]>';
+    echo '</wong>';
+    echo'<digg>';
+    echo '<![CDATA[' . variable_get('hdflvplayer_language_digg', '') . ']]>';
+    echo '</digg>';
+    echo'<blinklist>';
+    echo '<![CDATA[' . variable_get('hdflvplayer_language_blinklist', '') . ']]>';
+    echo '</blinklist>';
+    echo'<bebo>';
+    echo '<![CDATA[' . variable_get('hdflvplayer_language_bebo', '') . ']]>';
+    echo '</bebo>';
+    echo'<fark>';
+    echo '<![CDATA[' . variable_get('hdflvplayer_language_fark', '') . ']]>';
+    echo '</fark>';
+    echo'<tweet>';
+    echo '<![CDATA[' . variable_get('hdflvplayer_language_tweet', '') . ']]>';
+    echo '</tweet>';
+    echo'<furl>';
+    echo '<![CDATA[' . variable_get('hdflvplayer_language_furl', '') . ']]>';
+    echo '</furl>';
+    echo '<adindicator><![CDATA[Your selection will follow this sponsorss message in - seconds]]>';
+    echo '</adindicator>';
+    echo '<Skip><![CDATA[Skip this Video]]></Skip>';
+    echo'<download>';
+    echo '<![CDATA[' . variable_get('hdflvplayer_language_download', '') . ']]>';
+    echo '</download>';
+    echo '<errormessage><![CDATA[' . variable_get('hdflvplayer_language_errormessage', '') . ']]></errormessage>';
+    echo '<buttonname><![CDATA[' . variable_get('hdflvplayer_language_btnname', '') . ']]></buttonname>';
+    echo '</language>';
+    exit();
+}
+
+/* * ***********************************************GET HDFLV NODE CONFIG - PAGE SETTINGS********************************************************************************** */
+/*
+ * If node type settings override.Retrive the values from hdflvplayer_node Table.
+ */
+
+function hdflvplayer_node_configuration_values($node = null, $profile_name = null, $params = array()) {
+
+    if (variable_get('hdflvplayer_' . $node->type . '_override', false)) {
+
+        $nodeConfig = unserialize(db_result(db_query('SELECT config FROM {hdflvplayer_node} WHERE nid = %d', $node->nid)));
+
+        if ($nodeConfig) {
+
+            foreach ($nodeConfig as $key => $value) {
+                $config[$key] = $value;
+            }
+        }
+    }
+    return $config;
+}
+
+/* * ***********************************************GET HDFLV PLAYLIST********************************************************************************** */
+/*
+ * Retrive the videoid from hdflvplayerupload Table.
+ */
+
+function hdflvplayer_playlist_get_video($node = null, $id = null) {
+
+    ob_clean();
+
+    static $video;
+
+    if (!isset($video)) {
+
+        $results = db_query('SELECT * FROM {hdflvplayerupload} where published = 1 AND playlistid="' . $id . '" ORDER BY id DESC');
+
+        while ($result = db_fetch_array($results)) {
+
+            $video = $result['id'];
+        }
+    }
+    echo $video;
+    exit;
+}
+
+/* * ***********************************************GET HDFLV VideoID********************************************************************************** */
+/*
+ * Retrive the playlist from hdflvplayer_playlist Table.
+ */
+
+function hdflvplayer_playlist_get_configs($return = 'playid') {
+
+    static $playlist;
+
+    if (!isset($playlist)) {
+
+        $results = db_query('SELECT * FROM {hdflvplayer_playlist}');
+
+        while ($result = db_fetch_array($results)) {
+            $playlist[$result[$return]] = $result['name'];
+        }
+    }
+    return $playlist;
+}
+
+/* * ***********************************************HDFLV GOOGLE ADSENSE **************************************************************************** */
+/*
+ * Menu callback for getting googleadsense in Content page.
+ */
+
+function hdflvplayer_googlescript() {
+
+    static $googleScript;
+
+    if (variable_get('hdflvplayer_google_puplished', '') == '1') {
+        $googleScript = variable_get('hdflvplayer_google_code', '');
+    }
+
+    echo $googleScript;
+
+    exit;
+}
+
+/* * ***********************************************GET HDFLV ADS********************************************************************************** */
+/*
+ * Retrive the ads from hdflvplayerads Table.
+ */
+
+function hdflvplayer_ad_roll($return = 'id') {
+
+    static $adroll;
+
+    $results = db_query('SELECT * FROM {hdflvplayerads}');
+
+    while ($result = db_fetch_array($results)) {
+        $adroll[$result[$return]] = $result['adsname'];
+    }
+
+    return $adroll;
+}
+
+/* * ************************************************************ Delete Playlist**************************************************************************** */
+/*
+ * Delete Playlist from hdflvplayer_playlist.
+ */
+
+function hdflvplayer_delete_playlist($type, $id) {
+
+    db_query("DELETE from {hdflvplayer_playlist} where playid='$id'");
+
+    drupal_set_message(t('Playlist Deleted Successfully'));
+
+    $url = "../playlist";
+
+    header('Location: ' . $url);
+}
+
+/* * ************************************************************ Delete Playlist**************************************************************************** */
+/*
+ * Delete Ads from hdflvplayerads.
+ */
+
+function hdflvplayer_delete_ads($type, $id) {
+
+    db_query("DELETE from {hdflvplayerads} where id='$id'");
+
+    drupal_set_message(t('Ad Deleted Successfully'));
+
+    $url = "../ads";
+
+    header('Location: ' . $url);
+}
+
+/* * ********************************************************* HDFLV VIDEO UPLOAD FUNCTIONS *************************************************************** */
+/*
+ * Video upload function
+ */
+
+function hdflvplayer_upload_roll() {
+
+    $uploadDir = 'sites/default/files/hdflvplayer/ads/';
+
+    $file = $uploadDir . basename($_FILES['uploadfile']['name']);
+
+    if (move_uploaded_file($_FILES['uploadfile']['tmp_name'], $file)) {
+        echo "success";
+        exit;
+    } else {
+        echo "error";
+        exit;
+    }
+}
+
+/* * ********************************************************* HDFLV VIDEO UPLOAD FUNCTIONS *************************************************************** */
+/*
+ * Video upload function
+ */
+
+function hdflvplayer_upload_video() {
+
+    $uploadDir = 'sites/default/files/hdflvplayer/videos/';
+
+    $file = $uploadDir . basename($_FILES['uploadfile']['name']);
+
+    if (move_uploaded_file($_FILES['uploadfile']['tmp_name'], $file)) {
+        echo "success";
+        exit;
+    } else {
+        echo "error";
+        exit;
+    }
+}
+
+/* * ********************************************************* HDFLV HD VIDEO UPLOAD FUNCTIONS *************************************************************** */
+/*
+ * Video hd upload function
+ */
+
+function hdflvplayer_upload_hd() {
+
+    $uploadDir = 'sites/default/files/hdflvplayer/hdvideos/';
+
+    $file = $uploadDir . basename($_FILES['uploadfile']['name']);
+
+    if (move_uploaded_file($_FILES['uploadfile']['tmp_name'], $file)) {
+        echo "success";
+        exit;
+    } else {
+        echo "error";
+        exit;
+    }
+}
+
+/* * ********************************************************* HDFLV HD VIDEO UPLOAD FUNCTIONS *************************************************************** */
+/*
+ * Video hd upload function
+ */
+
+function hdflvplayer_upload_thumb() {
+
+    $uploadDir = 'sites/default/files/hdflvplayer/thumb/';
+
+    $file = $uploadDir . basename($_FILES['uploadfile']['name']);
+
+    if (move_uploaded_file($_FILES['uploadfile']['tmp_name'], $file)) {
+        echo "success";
+        exit;
+    } else {
+        echo "error";
+        exit;
+    }
+}
+
+/* * *************************************************** Menu callback for administrative settings form.************************************************** */
+/*
+ * Hdflv page settings.
+ * we can set What are all pages want hdflv settings.
+ */
+
+function hdflvplayer_page_settings() {
+
+    // get a listing of all the content types
+    drupal_add_css(drupal_get_path('module', 'hdflvplayer') . '/style/hdflvplayerpage.css');
+
+    $types = _node_types_build();
+
+    $enabled_types = variable_get('hdflvplayer_types', array());
+
+    $form['content']['hdflvplayer_types'] = array(
+        '#type' => 'select',
+        '#multiple' => true,
+        '#title' => t('Player enabled'),
+        '#description' => t('Choose which content types you want to be able to use video players on.'),
+        '#options' => $types[1],
+        '#default_value' => $enabled_types,
+    );
+
+    if ($enabled_types) {
+
+        foreach ($enabled_types as $name => $value) {
+
+            if ($value) {
+                // create content type field set
+
+                $form['content']['thetype_' . $value] = array(
+                    '#type' => 'fieldset',
+                    '#title' => t('Content: %type settings', array('%type' => $types[1][$value])),
+                );
+
+                // allow over ride
+
+                $form['content']['thetype_' . $value]['hdflvplayer_' . $value . '_override'] = array(
+                    '#title' => t('Allow settings override'),
+                    '#type' => 'checkbox',
+                    '#default_value' => variable_get('hdflvplayer_' . $value . '_override', false),
+                    '#description' => t('Allow authors of a node to override these settings on an individual node.'),
+                );
+            }
+        }
+    }
+
+    return system_settings_form($form);
+}
+
+/* * *************************************************** HDFLV Form in Content Page.************************************************** */
+/*
+ * Hdflv Content Page.
+ * hdflv settings form elements.
+ */
+
+function hdflvplayer_form_alter(&$form, &$form_state, $form_id) {
+
+    /* If this page have override hdflv settings */
+
+    if ($form_id == $form['#node']->type . '_node_form' && variable_get('hdflvplayer_' . $form['#node']->type . '_override', false)) {
+
+        $config = hdflvplayer_node_configuration_values($form['#node']);
+
+        $form['hdflvplayer'] = array(
+            '#type' => 'fieldset',
+            '#title' => t('HDFLVPlayer Video Path'),
+            '#collapsible' => true,
+            '#collapsed' => true,
+            '#description' => t('You can override any of the basic settings for this player here.'),
+        );
+
+        $form['hdflvplayer']['hdflv_player_width'] = array(
+            '#type' => 'textfield',
+            '#rows' => 1,
+            '#title' => t('Player Width'),
+            '#description' => t('Enter a URL to use with this flash player. You should include http:// in the url.'),
+            '#default_value' => $config['player_width'],
+        );
+
+        $form['hdflvplayer']['hdflv_player_height'] = array(
+            '#type' => 'textfield',
+            '#rows' => 1,
+            '#title' => t('Player Height'),
+            '#description' => t('Enter a URL to use with this flash player. You should include http:// in the url.'),
+            '#default_value' => $config['player_height'],
+        );
+
+        $form['hdflvplayer']['hdflv_player_videoid'] = array(
+            '#type' => 'textfield',
+            '#rows' => 1,
+            '#title' => t('Video Id'),
+            '#description' => t('Enter a URL to use with this flash player. You should include http:// in the url.'),
+            '#default_value' => $config['player_videoid'],
+        );
+
+        $form['hdflvplayer']['hdflv_player_playlistid'] = array(
+            '#type' => 'textfield',
+            '#rows' => 1,
+            '#title' => t('Playlist Id'),
+            '#description' => t('Enter a URL to use with this flash player. You should include http:// in the url.'),
+            '#default_value' => $config['player_playlistid'],
+        );
+    }
+}
+
+/* * *********************************************************HDFLV Delete Video********************************************************************* */
+/*
+ * Delete the video from hdflvplayerupload table.
+ */
+
+function hdflvplayer_delete_video($type, $id) {
+
+    db_query("DELETE from {hdflvplayerupload} where id='$id'");
+
+    drupal_set_message(t('Video Deleted Successfully'));
+
+    $url = "../list";
+
+    header('Location: ' . $url);
+}
+
+/* * ***********************************************HDFLV INTERNAL FUNCTIONS **************************************************************************** */
+/*
+ * Menu callback for getting player in Content page.
+ */
+
+function hdflvplayer_nodeapi(&$node, $op, $a3, $a4) {
+
+    switch ($op) {
+
+        case "view":
+
+            $node_config = unserialize(db_result(db_query('SELECT config FROM {hdflvplayer_node} WHERE nid = %d', $node->nid)));
+
+            // replace any of the profile data with the node configuration data
+
+            if ($node_config) {
+
+                foreach ($node_config as $key => $value) {
+
+                    $config[$key] = $value;
+                }
+
+                $width = $config['player_width'];
+
+                $height = $config['player_height'];
+
+                $playlistId = $config['player_playlistid'];
+
+                $videoId = $config['player_videoid'];
+            } else {
+
+                $width = variable_get('hdflvplayer_width', '');
+
+                $height = variable_get('hdflvplayer_height', '');
+
+                $playlistId = '';
+
+                $videoId = '';
+            }
+
+            $text = $node->content["body"]["#value"];
+
+            $regex = "/\[hdplay ([^]]*)\]/i";
+
+             global $base_url;
+
+            if (preg_match_all($regex, $text, $matches)) {
+
+                $text = "<div name='mediaspace' id='mediaspace'>
+             <embed type='application/x-shockwave-flash' src='$base_url/sites/all/modules/hdflvplayer/hdflvplayer/hdplayer.swf'
+             style='' id='player' name='player' quality='high' allowfullscreen='true'
+             allowscriptaccess='always' wmode='transparent'  flashvars='config=$base_url/node/$node->nid/hdflvplayer-config_id' width='$width' height='$height'>
+          </div>";
+
+                $node->content["body"]["#value"] = $text;
+            }
+            break;
+
+        // Save any registered hdflvplayer data.
+
+        case 'insert':
+
+        case 'update':
+
+            // Collect from data off the node. All flvmp values have prefix 'flvmp_'
+
+            $pattern = '/^hdflv_(.*)/';
+
+            foreach ($node as $key => $value) {
+
+                if (preg_match($pattern, $key, $matches)) {
+
+// we have a singleton for the flashvar_file.
+
+                    $value = preg_replace("/\s/", '', $value);
+
+                    $flv_options[$matches[1]] = $value;
+                }
+            }
+
+            /* database query for insert the values into database. and delete existing */
+
+            db_query('DELETE FROM {hdflvplayer_node} WHERE nid = %d', $node->nid);
+            db_query('INSERT INTO {hdflvplayer_node} (nid, config) VALUES (%d, "%s")', $node->nid, serialize($flv_options));
+            break;
+    }
+}
+
+?>

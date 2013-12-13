@@ -1,0 +1,5 @@
+; $Id$
+name = Custom functions
+description = A module to hold custom functions for paulsodlaw.com.
+package = Paul Sod Law
+core = 6.x

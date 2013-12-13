@@ -1,0 +1,302 @@
+<?php
+// $Id: linkedin.module,v 1.1.2.5 2010/05/13 12:29:36 bellesmanieres Exp $
+
+/*
+ * @file : Main hooks implementation for Linkedin module
+*/
+
+/*
+ * hook_init()
+ * Make sure we load needed files.
+*/
+
+function linkedin_init() {
+  module_load_include('lib.php', 'oauth');
+  module_load_include('inc', 'linkedin');
+  module_load_include('pages.inc', 'linkedin');
+  global $theme_path;
+  $linkedin_css = $theme_path .'/linkedin.css';
+  if (file_exists($linkedin_css)) {
+    drupal_add_css($linkedin_css);
+  }
+  else {
+    drupal_add_css(drupal_get_path('module', 'linkedin') .'/linkedin.css');
+  }
+}
+
+/*
+ * hook_menu
+*/
+function linkedin_menu() {
+
+  $items = array();
+
+  //global settings form
+  $items['admin/settings/linkedin'] = array(
+          'title' => 'LinkedIn integration',
+          'description' => 'linkedin module settings',
+          'page callback' => 'drupal_get_form',
+          'page arguments' => array('linkedin_admin'),
+          'access arguments' => array('administer site configuration'),
+          'file' => 'linkedin.pages.inc'
+  );
+
+//  $items['admin/settings/linkedin/profile_fields'] = array(
+//          'title' => 'LinkedIn Profile fields',
+//          'description' => 'linkedin module settings',
+//          'page callback' => 'drupal_get_form',
+//          'page arguments' => array('linkedin_admin_profile_fields'),
+//          'access arguments' => array('administer site configuration'),
+//          'file' => 'linkedin.pages.inc'
+//  );
+
+  //user settings form
+  $items['user/%user/edit/linkedin'] = array(
+          'title' => 'Linkedin',
+          'page callback' => 'linkedin_user_settings',
+          'page arguments' => array(1),
+          'access callback' => '_linkedin_user_access', //access arguments don't support multiple arguments, so create our access handler
+          'type' => MENU_LOCAL_TASK,
+          'file' => 'linkedin.pages.inc'
+  );
+
+  //callback for oauth token request on linkedin API.
+  $items['linkedin/token/%'] = array(
+          'page callback' => 'linkedin_access_token',
+          'page arguments' => array(2),
+          'access callback' => '_linkedin_user_access',
+          'type' =>MENU_CALLBACK,
+          'file' => 'linkedin.inc'
+  );
+
+  if(variable_get('linkedin_profile_enabled', '0') == '1') {
+    //LinkedIn profile tab for users
+    $items['user/%user/linkedin'] = array(
+            'title' => 'Linkedin',
+            'page callback' => 'linkedin_profile_display',
+            'page arguments' => array(1),
+            'type' => MENU_LOCAL_TASK,
+            'access callback' => '_linkedin_profile_display_access',
+            'access arguments' => array(1),
+            'file' => 'linkedin.pages.inc',
+    );
+  }
+  return $items;
+}
+
+/*
+ * hook_theme()
+*/
+function linkedin_theme($existing, $type, $theme, $path) {
+  return array(
+          //Let themers hook into profile elements
+          'linkedin_profile' => array(
+                  'arguments' => array('profile' => NULL),
+          ),
+  );
+}
+
+/*
+ * hook_user()
+*/
+function linkedin_user($op, &$edit, &$account, $category = NULL) {
+  switch ($op) {
+
+    case 'categories':
+      return array(
+              array(
+                      'name' => 'linkedin',
+                      'title' => 'LinkedIn',
+                      'weight' => 3,
+              ),
+      );
+      break;
+
+    case 'load':
+      if(variable_get('linkedin_profile_enabled', '0') > '2') {
+        static $profile; // no need to ask for each user_load
+        if(!isset($profile)) {
+          $profile = linkedin_get_profile_fields($account->uid, array(
+                  'picture-url',
+                  'first-name',
+                  'last-name',
+                  'headline',
+                  'location',
+                  'industry',
+                  'summary',
+                  'specialties',
+                  'public-profile-url',
+                  'current-status-timestamp',
+                  'current-status',
+                  ), TRUE);
+        }
+        if($profile != 'refused') {
+          $account->linkedin = $profile;
+        }
+      }
+
+      break;
+
+    case 'view':
+      if(variable_get('linkedin_profile_enabled', '0') == '2' && _linkedin_profile_display_access($account)) {
+        $account->content['linkedin'] = array(
+                '#type' => 'user_profile_item',
+                '#title' => t('Linkedin'),
+                '#value' =>linkedin_profile_display($account),
+                '#weight' => variable_get('linkedin_profile_weight', 2),
+        );
+      }
+      break;
+  }
+}
+
+/*
+ * hook_perm()
+*/
+function linkedin_perm() {
+  return array('display LinkedIn profile', 'update LinkedIn status', 'use custom status text');
+}
+
+/*
+ * Custom access callback for user/%user/edit/linkedin
+*/
+function _linkedin_user_access () {
+  if(user_access('display LinkedIn profile') || user_access('update LinkedIn status')) {
+    return TRUE;
+  } else {
+    return FALSE;
+  }
+}
+
+/*
+ * Custom access callback for user/%user/linkedin
+*/
+function _linkedin_profile_display_access($account) {
+  global $user;
+  if(
+  variable_get('linkedin_profile_enabled', '0') < '1' ||
+          !user_access('access user profiles') ||
+          !user_access('display LinkedIn profile', $account) ||
+          $account->linkedin_profile_enabled != '1') {
+    return FALSE;
+  }
+  $check = linkedin_get_profile_fields($account->uid, array('id'));
+  if($check == 'refused') { // no need to display an empty tab
+
+    return FALSE;
+  }
+  return TRUE;
+}
+
+/*
+ * hook_block() * 
+*/
+function linkedin_block($op = 'list', $delta = 0, $edit = array()) {
+  switch ($op) {
+
+    case 'list' :
+      $blocks[0]['info'] = t('LinkedIn Profile');
+      $blocks[0]['cache'] = BLOCK_NO_CACHE;
+      return $blocks;
+
+    case 'view' :
+      if(arg(0) == 'user' && is_numeric(arg(1))) {
+        if(variable_get('linkedin_profile_enabled', '0') ==  '3') {
+          $account = user_load(arg(1));
+          if(_linkedin_profile_display_access($account)) {
+            $block['subject'] = t('Linkedin Profile');
+            $block['content'] = theme('linkedin_profile', $account->linkedin);
+            return $block;
+          }
+        }
+      }
+  }
+}
+/*
+ * hook_form_alter()
+ * Call the user form when needed.
+*/
+function linkedin_form_alter(&$form, $form_state, $form_id) {
+  if($form_id == 'signup_form') {// add our form into event signup
+    global $user;
+    if(variable_get('linkedin_enabled_event_signup', '0') != '1' || !user_access('update LinkedIn status')) {
+      return;
+    } else {
+      //node object is not at same key everytime, so iterate until we find it
+      $array = $form['#parameters'];
+      $node = new stdClass();
+      foreach($array as $k) {
+        if(is_object($k) && isset($k->nid) && $k->type == 'event') {
+          $node = $k;
+          break;
+        } else {
+          array_pop($array);
+        }
+      }
+      $form['collapse']['signup_user_form']['linkedin'] = drupal_retrieve_form('linkedin_user_status_update_form', $form_state, $user, $node);
+      array_unshift($form['#submit'],  'linkedin_user_status_update_form_submit' ); //manually adding our submit handler
+    }
+
+
+  } else {//add our form into nodes edit page and comments
+    if( (isset($form['#node']) && $form['#node']->type .'_node_form' == $form_id) || ($form_id == 'comment_form' && $form['form_id']['#id'] == 'edit-comment-form') ) {
+      global $user;
+      $node = (isset($form['#node'])) ? $form['#node'] : node_load($form['nid']['#value']);
+      if(variable_get('linkedin_enabled_'. $node->type, '0') != '1' || !user_access('update LinkedIn status') || ($form_id == 'comment_form' && variable_get('linkedin_enabled_comment', '0') != '1')) {
+        return;
+      } else {
+        $form['linkedin'] = drupal_retrieve_form('linkedin_user_status_update_form', $form_state, $user, $node);
+        array_unshift($form['#submit'],  'linkedin_user_status_update_form_submit' );
+      }
+    }
+  }
+ 
+  return $form;
+}
+
+/**
+ * Implementation of hook_nodeapi()
+ */
+function linkedin_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
+  switch($op) {
+    //For newly created nodes, token replacement cannot be done in the submit function for update status message.
+    //So we delay and do it here instead of linkedin_user_status_update_form_submit()
+    case 'insert':
+      if($node->linkedin_status['posting'] == '1' && !empty($node->linkedin_status['status'])) {
+      global $user;
+      $placeholders = array(
+              '!title' => $node->title,
+              '!url' => url('node/'. $node->nid, array('absolute' => TRUE)),
+              '!user' => $user->name,
+              '!site' => variable_get('site_name', $base_url),
+      );
+      
+
+      $status = strtr($node->linkedin_status['status'], $placeholders);
+      linkedin_put_profile_field($user->uid, 'current-status', $status);
+      drupal_set_message(t('Posted to LinkedIn'));
+      break;
+      }
+  }
+}
+
+/*
+ * Themer function for user profile
+*/
+function theme_linkedin_profile($profile) {
+  $output = '';
+  $output .= '<a href="'. $profile['public-profile-url'] .'" title="Public profile of '. $profile['first-name'] .' '.$profile['last-name'] .' on www.linkedin.com.">';
+  if($profile['picture-url']) {
+    $output .= '<img src="'. $profile['picture-url'] .'" alt="'. $profile['first-name'] .' '.$profile['last-name'] .'" />';
+  }
+  $output .= '<h2 class="linkedin-name">'. $profile['first-name'] .' '.$profile['last-name'] .'</h2></a>';
+  $output .= '<h3 class="linkedin-headline">'. $profile['headline'] .' <i>('.$profile['industry'] .')</i></h3>';
+  $output .= '<p class="linkedin-location">'. $profile['name'] .'</p>';
+  $output .= '<div class="linkedin-summary">'. $profile['summary'] .'</div>';
+  $output .= '<div class="linkedin-specialties">'. $profile['specialties'] .'</div>';
+  $output .= '<div class="linkedin-status">';
+  $output .= '<p class="linkedin-submitted">'. format_date($profile['current-status-timestamp']/1000) .'</p>';
+  $output .= $profile['current-status'];
+  $output .= '</div>';
+  return $output;
+}

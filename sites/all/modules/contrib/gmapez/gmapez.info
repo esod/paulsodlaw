@@ -1,0 +1,11 @@
+; $Id: gmapez.info,v 1.1 2008/08/05 05:11:08 berend Exp $
+name = GMapEZ
+description = Google Maps via the GMapEZ library.
+
+
+; Information added by drupal.org packaging script on 2010-04-12
+version = "6.x-1.3"
+core = "6.x"
+project = "gmapez"
+datestamp = "1271110207"
+

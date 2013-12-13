@@ -1,0 +1,33 @@
+<?php
+// $Id:
+// Language Sections Block Titles module for Drupal.
+// License: http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+// Support: Commercial support and customization is available from www.netgenius.co.uk
+// Contact: www.netgenius.co.uk/contact or email drupal at netgenius.co.uk
+
+/*
+ * Process a block to set its title.
+ */
+function ls_block_titles_process(&$variables) {
+  // Reference the block content.
+  $block =& $variables['block'];
+  // If not dealing with a "custom" block, quick-exit.
+  if ($block->module != 'block')  return;
+
+  // Strangely, block id is in $block->delta and not $block->bid as you would expect!
+  $bid = $block->delta;
+  // Use the same query as block_block('view') (block.module) so probably cached by DB engine.
+  // $box = db_fetch_array(db_query('SELECT body, format FROM {boxes} WHERE bid = %d', $bid));
+  // Safe option - use block_box_get;
+  $box = block_box_get($bid);
+
+  // Fetch the updated title if present.
+  $title = ls_titles_process('get', $box['body'], $box['format']);
+  if ($title != '!')  $block->subject = $title;
+}
+
+// Hook our function into theme processing.
+function ls_block_titles_theme($existing, $type, $theme, $path) {
+  $ret['block']['preprocess functions'][0] = 'ls_block_titles_process';
+  return $ret;
+}

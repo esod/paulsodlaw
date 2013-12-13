@@ -1,0 +1,30 @@
+/* $Id: error404.css $ */
+
+/**
+ * @file
+ * Error 404 page. Please revisit 6.13.2010
+ */
+ 
+.search-form {
+  margin-left:30px;
+  width:760px;
+}
+
+ul.bullet-list {
+  float:left;
+  padding-right:48px;
+}
+
+ul.bullet-list li{
+  margin-bottom: 12px;
+  list-style-type: square;
+}
+
+.footnote {
+  font-size: 12px;
+  line-height: 17px;
+}
+
+p.footnote a:hover {
+  color: #FF9000;
+}

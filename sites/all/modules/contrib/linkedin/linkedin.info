@@ -1,0 +1,13 @@
+; $Id: linkedin.info,v 1.1.2.1 2010/05/13 12:29:36 bellesmanieres Exp $
+name = "LinkedIn"
+core = "6.x"
+description = "Provides LinkedIn integration."
+dependencies[] = oauth
+
+
+; Information added by drupal.org packaging script on 2010-05-14
+version = "6.x-1.x-dev"
+core = "6.x"
+project = "linkedin"
+datestamp = "1273795726"
+

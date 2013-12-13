@@ -1,0 +1,11 @@
+<?php
+/**
+* Implementation of hook_init
+*/
+function custompaulsodlaw_init() {
+  global $custom_theme;
+  // Return 404 for admin pages to anon users - use default site theme
+  if ( arg(0) == 'admin' && ! user_is_logged_in() ) {
+    $custom_theme = variable_get('theme_default', 'paulsodlaw');
+  }
+}

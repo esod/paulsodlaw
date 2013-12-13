@@ -1,0 +1,8 @@
+<?php
+
+/* Uninstall settings */
+
+function gmapez_uninstall () {
+  variable_del ('gmapez_gmapkey');
+  variable_del ('gmapez_always');
+}

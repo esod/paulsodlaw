@@ -1,0 +1,89 @@
+$Id:
+Tue 20 Apr 2010 14:41:28 CEST 
+
+To release as 1.8.
+
+Mon 12 Apr 2010 12:20:23 CEST 
+
+LS Node Titles:
+* Changed: Check body first, then if teaser is separate (not in body) check there too. 
+  More efficient as saves a wasted call to ls_titles process in typical cases.
+  Also, checking the teaser when it's just a trimmed version of the body could break LS logic maybe.
+* Changed $processed to single value instead of array - will save memory on pages which display many nodes.
+
+LS Titles:
+* Fixed: Use language_sections_format_check($format), not $node->format.
+
+Fri 09 Apr 2010 12:23:04 CEST 
+
+LS Titles:
+* Removed 'count' debug lines.
+* Do language_sections_format_check($format) before further processing.
+* Use current $id if $active - avoids repeated md5 calculation.
+* Changed to add space instead of \n to for forcing separate caching of title since that is less likely to affect display.
+* Clear static cache after miss to prevent using up memory (e.g. front page or display of nodes with lots of comments.)
+
+LS Node Titles:
+* Added $processed[$node->nid] prevent unnecessary node_load() etc during 'prepare'.
+* Removed $disabled flag, now handled with $processed[].
+* Changed to pass $node-nid to ls_titles_process for use as id.
+
+LS View Titles:
+* Check: isset($display_options) before further processing.
+* Remove language_sections_format_check() as it's now done in LS Titles.
+
+LS Block Titles:
+* Remove language_sections_format_check() as it's now done in LS Titles.
+* Use block_box_get() instead of query to fetch block data for better compatibility with possible future Drupal changes.
+
+Thu 08 Apr 2010 17:52:17 CEST 
+
+* LS Titles: Added some static caching for better performance, especially with non-cacheable filter formats.
+
+Thu 08 Apr 2010 12:43:55 CEST 
+
+* LS Node Titles: Added ls_node_title function for use with CCK "dynamic field" or other custom PHP.
+
+Wed 07 Apr 2010 22:37:31 CEST 
+
+* Added LS View Titles sub-module.
+* To be released as 1.7
+
+Date? 
+
+* Fixed http://drupal.org/node/755338 (title shows as "n/a" in some circumstances.)
+* To be released as 1.6
+
+Sat 27 Mar 2010 12:07:02 CET 
+
+* Removed debug message.
+
+Sat 27 Mar 2010 11:23:21 CET 
+* Fixed bug that blank title was set if no title defined in text.
+
+Fri 26 Mar 2010 23:14:14 CET 
+
+* Using improved method for better performance
+* Needs updated Language Sections module 2.3
+* Fixed bug in introduced in 1.2 when editing node title was wrong.
+* To be released as 1.3
+
+Thu 25 Mar 2010 19:59:36 CET 
+
+* Now three modules, LS Titles, LS Node Titles and LS Block Titles
+* Needs updated Language Sections.
+* Node Titles are set on node-load, but updated body is not saved, leaving it to the normal filter process.  The result is simpler overall, with hopefully less chance of side-effects.
+* To be released as 1.1.
+
+Wed 24 Mar 2010 16:14:04 CET 
+
+* LS Titles now uses language_sections_format_check() if available to avoid calling language_sections_filter() unless needed.
+
+Tue 23 Mar 2010 22:09:03 CET 
+
+* Fixed bug which prevent node/add from form displaying correctly.
+
+Tue 23 Mar 2010 00:19:30 CET 
+
+* Initial version of LS Titles, to be released as 1.0.
+

@@ -1,0 +1,521 @@
+/* $Id: pages.css,v 1.18.2.3 2010/06/26 17:18:58 johnalbin Exp $ */
+
+/**
+ * @file
+ * Page Styling
+ *
+ * Style the markup found in page.tpl.php. Also includes some styling of
+ * miscellaneous Drupal elements that appear in the $content variable, such as
+ * ul.links, .pager, .more-link, etc.
+ */
+
+
+/*
+ * Body
+ */
+body {
+  margin: 0;
+  padding: 0;
+}
+
+#page {
+  font:80%/160% "Trebuchet MS",Arial,sans-serif;
+  background-color:#FFFFFF;
+}
+
+/* Do something here */
+p.in-the-news a:hover {
+  color:#FF9000;
+}
+#block-block-1 {
+  margin-left:12px;
+  margin-top:12px;
+}
+
+/*
+ * The skip navigation link will be completely hidden until a user tabs to the
+ * link. See http://www.webaim.org/techniques/skipnav/
+ */
+#skip-link a,
+#skip-link a:visited {
+  position: absolute;
+  display: block;
+  left: 0;
+  top: -500px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  text-align: center;
+  background-color: #666;
+  color: #fff;
+}
+
+#skip-link a:hover,
+#skip-link a:active,
+#skip-link a:focus {
+  position: static;
+  width: 100%;
+  height: auto;
+  padding: 2px 0 3px 0;
+}
+
+/*
+ * Header
+ */
+#header {
+}
+
+#header .section {
+}
+
+#logo /* Wrapping link for logo */ {
+  float: left; /* LTR */
+  margin: 0;
+  padding: 0;
+}
+
+#logo-title{
+	width:400px;
+	float:left;
+}
+
+#logo img {
+  vertical-align: bottom;
+}
+
+#name-and-slogan /* Wrapper for website name and slogan */ {
+  float: left;
+}
+
+h1#site-name,
+div#site-name,
+h1#site-name a, 
+div#site-name a
+/* The name of the website */ {
+  color:#FFFFFF;
+  font-size: 24px;
+  font-weight:bold;
+  line-height: 26px;
+  margin:0px 0px 4px 10px;
+  padding-top: 18px;
+}
+
+h1#site-name a:hover, 
+div#site-name a:hover {
+  color:#B5C4E3;
+}
+
+#site-slogan /* The slogan (or tagline) of a website */ {
+  color:#FFFFFF;
+  font-size:13px;
+  line-height:19px;
+  font-weight:normal;
+  margin-left:20px;
+  margin-bottom:24px;
+}
+
+.region-header /* Wrapper for any blocks placed in the header region */ {
+  float:right;
+  margin-top:10px;
+  margin-right:24px;
+}
+
+/* 
+ * rotor.css
+ */
+.rotor-content{
+  border:1px solid #a0b9f3;
+  background-color: #ffffff;
+  color:#192666;
+  padding:12px 18px 0px 18px;
+}
+
+.rotor-items {
+  overflow:hidden;
+  margin-bottom:9px;
+}
+
+.rotor-tab:hover {
+  cursor:pointer;
+}
+	
+.rotor-tab.selected {
+  font-weight:bold;
+}
+	
+.rotor-content-detail {
+  padding: 0;
+  margin: 0;
+}
+	
+.views-field-field-recommendation-for-value{
+  font-size:12px;
+  font-weight:bold;
+  padding:0px;
+}
+.view-content .item-list li{
+  padding:0px;
+  margin:0px;
+  list-style-type: none;
+}
+.views-field-body a:hover{
+  color:#FF9000;
+}
+.views-label-body {
+  font-weight:bold;
+}
+.views-field-field-date-value {
+  padding:0px;
+}
+img.imagecache {
+  margin-bottom:2em;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+.imagecache-extra_small {
+  display: block;
+  float: right;
+  border:2px solid #8ca3d8;
+  margin-top:0.5em;
+}
+.imagecache-extra_small:hover {
+  border:2px solid #192666;
+}
+.field-content p {
+  margin:3px 0px 3px 0px;
+}
+.linkedin_recommendation {
+  font-size:14px;
+  line-height:18px;
+  margin:0px;
+}
+.views-field-body{
+  list-style-type: none;
+}
+.views-field-field-recommended-by-value {
+  margin-right:12px;
+  font-size:12px;
+  text-align:right;
+}
+	
+.views-field-field-date-value {
+  font-size:12px;
+  margin-right:12px;
+  line-height:20px;
+  text-align:right;
+}
+	
+.views-field-field-company-value {
+  font-size:12px;
+}
+/* 
+ * End of rotor 
+ */
+
+/*
+ * Main (container for everything else)
+ */
+#main-wrapper {
+}
+
+#main {
+}
+
+/*
+ * Content
+ */
+#content {
+}
+
+#content .section {
+  width: 530px;
+  color: #192666;
+}
+
+#mission /* The mission statement of the site (displayed on homepage) */ {
+}
+
+.region-content-top /* Wrapper for any blocks placed in the "content top" region */ {
+}
+
+.breadcrumb /* The path to the current page in the form of a list of links */ {
+  padding-bottom: 0; /* Undo system.css */
+}
+
+h1.title {
+  font-size: 18px;
+  line-height: 26px;
+  font-weight: bold;
+  text-align: left;
+  margin-top:18px;
+}
+h2 {
+	font-size:18px;
+	line-height:40px;
+}
+h2.title {
+  font-size:16px;
+  line-height:16px;
+  margin-top:24px;
+  margin-bottom:0px;
+}
+h2.title a:hover {
+}
+h3 {
+  font-size: 110%;
+  font-weight: bold;
+}
+h4, h5, h6 {
+  font-weight: bold;
+  font-family: "Trebuchet MS", Arial, sans-serif;
+}
+p.office-location {
+  font-size:12px;
+}
+p.office-location-last {
+  margin-bottom:72px;
+  color: #192666;
+}
+
+tr.even /* Some tables have rows marked even or odd. */ {
+  /* background-color: #eee; */ /* Drupal core uses a #eee background */
+}
+
+tr.odd {
+  /* background-color: #eee; */ /* Drupal core uses a #eee background */
+}
+
+div.messages /* Important messages (status, warning, and error) for the user. See also the declarations in messages.css. */ {
+}
+
+div.status /* Normal priority messages */ {
+}
+
+div.warning,
+tr.warning /* Medium priority messages */ {
+  /* border: 1px solid #f0c020; */ /* Drupal core uses: 1px solid #f0c020 */
+}
+
+div.error,
+tr.error /* High priority messages. See also the .error declaration below. */ {
+}
+
+.error /* Errors that are separate from div.messages status messages. */ {
+  /* color: #e55; */ /* Drupal core uses a #e55 background */
+}
+
+.warning /* Warnings that are separate from div.messages status messages. */ {
+  /* color: #e09010; */ /* Drupal core uses a #e09010 background */
+}
+
+div.tabs /* See also the tabs.css file. */ {
+}
+
+.help /* Help text on a page */ {
+  margin: 1em 0;
+}
+
+.more-help-link /* Link to more help */ {
+  font-size: 0.85em;
+  text-align: right;
+}
+
+#content-area /* Wrapper for the actual page content */ {
+}
+
+ul.links /* List of links */ {
+  margin: 1em 0;
+  padding: 0;
+}
+
+ul.links.inline {
+  margin: 0;
+  display: inline;
+}
+
+ul.links li {
+  display: inline;
+  list-style-type: none;
+  padding: 0 0.5em;
+}
+
+.pager /* A list of page numbers when more than 1 page of content is available */ {
+  clear: both;
+  margin: 1em 0;
+  text-align: center;
+}
+
+.pager a,
+.pager strong.pager-current /* Each page number in the pager list */ {
+  padding: 0.5em;
+}
+
+.feed-icons /* The links to the RSS or Atom feeds for the current list of content */ {
+  margin: 1em 0;
+}
+
+.more-link /* Aggregator, blog, and forum more link */ {
+  text-align: right; /* LTR */
+}
+
+.region-content-bottom /* Wrapper for any blocks placed in the "content bottom" region */ {
+}
+
+/*
+ * First sidebar (on left in LTR languages, on right in RTL)
+ *
+ * Remember to NOT add padding or margin to your .region-sidebar-first
+ * (see the layout.css file.)
+ */
+.region-sidebar-first {
+  margin-top:40px;
+}
+
+.region-sidebar-first .section {
+}
+
+/*
+ * Second sidebar (on right in LTR languages, on left in RTL)
+ *
+ * Remember to NOT add padding or margin to your .region-sidebar-second
+ * (see the layout.css file.)
+ */
+.region-sidebar-second {
+}
+
+.region-sidebar-second .section {
+}
+
+/*
+ * Footer
+ */
+
+#footer {
+  height: 60px;
+  margin-top:18px;
+  padding:5px 10px;
+  border-top:1px solid #a0b9f3;
+  background-color:#FFFFFF;
+}
+
+#footer li {
+  font-size: 15px;
+  line-height: 60px;
+  display: inline;
+  float: right;
+  margin-right: 36px;
+  padding-top: 5px;
+  border-bottom: 0;
+}
+
+.linkedin-logo
+  {
+	background-image: url(../icons/small/icon-linkedin.png);
+	background-repeat:no-repeat;
+	padding: 6px 28px 9px;
+}
+  
+#directions{
+  margin-right:48px;
+  font-size:12px;
+  font-weight: normal;
+  background-color: none;
+  float: right;
+}
+
+#directions a:hover {
+  color:#FF9000;
+}
+
+.disclaimer {
+  color:#192666;
+  font-size:10px;
+  float: left;
+}
+
+#footer .section {
+}
+
+#footer-message /* Wrapper for the footer message from Drupal's "Site information"
+                   and for any blocks placed in the footer region */ {
+}
+
+.region-footer {
+}
+
+/** 
+ * End of footer
+ */
+
+/*
+ * Closure
+ */
+.region-page-closure /* Wrapper for any blocks placed in the closure region */ {
+}
+
+/*
+ * Drupal boxes
+ *
+ * Wrapper for Comment form, Comment viewing options, Menu admin, and
+ * Search results.
+ */
+.box /* Wrapper for box */ {
+}
+
+.box h2 /* Box title */ {
+}
+
+.box .content /* Box's content wrapper */ {
+}
+
+/*
+ * Markup free clearing (See: http://www.positioniseverything.net/easyclearing.html )
+ */
+.clearfix:after {
+  content: ".";
+  display: block;
+  height: 0;
+  clear: both;
+  visibility: hidden;
+}
+
+/**
+ * Hide elements from all users.
+ *
+ * Used for elements which should not be immediately displayed to any user. An
+ * example would be a collapsible fieldset that will be expanded with a click
+ * from a user. The effect of this class can be toggled with the jQuery show()
+ * and hide() functions.
+ */
+.element-hidden {
+  display: none;
+}
+
+/**
+ * Hide elements visually, but keep them available for screen-readers.
+ *
+ * Used for information required for screen-reader users to understand and use
+ * the site where visual display is undesirable. Information provided in this
+ * manner should be kept concise, to avoid unnecessary burden on the user. Must
+ * not be used for focusable elements (such as links and form elements) as this
+ * causes issues for keyboard only or voice recognition users. "!important" is
+ * used to prevent unintentional overrides.
+ */
+.element-invisible {
+  position: absolute !important;
+  clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
+  clip: rect(1px, 1px, 1px, 1px);
+}
+
+/**
+ * Pager classes
+ * view = rotor_es
+ */
+
+li.pager-next a.active {
+  color: #192666;
+}
+li.pager-previous a.active {
+  color: #192666;
+}

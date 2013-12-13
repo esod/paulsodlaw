@@ -1,0 +1,56 @@
+<?php
+// $Id:
+// Language Sections Node Titles module for Drupal.
+// License: http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+// Support: Commercial support and customization is available from www.netgenius.co.uk
+// Contact: www.netgenius.co.uk/contact or email drupal at netgenius.co.uk
+
+/*
+ * Implement hook nodeapi.
+ * Two possible approaches: Modify on (1) node 'view' or (2) on node-load.
+ * Each has pros and cons. We process on node-load, as view is too late (page title already set.)
+ */
+function ls_node_titles_nodeapi(&$node, $op, $show_teaser) {
+
+  // Use $processed to track if we've already procssed a node.
+  static $processed;
+
+  // Trap node-load.
+  if ($op == 'load') {
+    // Quick-exit if node format does not use LS, or if we've already processed this node (when called via 'prepare' below.)
+//    if (!language_sections_format_check($node->format) || isset($processed[$node->nid])) {
+    if (!language_sections_format_check($node->format) || $processed == $node->nid) {
+      return;
+    }
+
+    // Look for a title in the node body first.
+    $title = ls_titles_process('get', $node->body, $node->format);
+    // If no title was found and the teaser is separate from the body, look in the teaser too.
+    if ($title == '!' && strncmp($node->body, $node->teaser, strlen($node->teaser)) != 0) {
+      $title = ls_titles_process('get', $node->teaser, $node->format);
+    }
+    // If a title was found, use it.
+    if ($title != '!')  {
+      $node->title = $title;
+//      $processed[$node->nid] = TRUE;
+      $processed = $node->nid;
+    }
+  }
+  elseif ($op == 'prepare') {
+    // If preparing an existing node which was processed above, reload the raw node (to get original title.)
+    if ($processed == $node->nid) {
+//    if (isset($processed[$node->nid])) {
+      $node = node_load($node->nid, $node->vid);
+    }
+  }
+}
+
+/*
+ * Simple function to get title, for use from cck dynamic field or other custom PHP.
+ * Call as ls_node_title($node) or ls_node_title($nid)
+ * Returns $node->title
+ */
+function ls_node_title($node, $display = FALSE) {
+  $node = node_load(is_numeric($node)? $node : $node->nid);
+  return ($display == 'link')? l($node->title, 'node/'.$node->nid) : $node->title;
+}

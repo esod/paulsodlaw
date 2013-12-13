@@ -1,0 +1,36 @@
+.form-item{
+    width:900px;
+    float:left;
+}
+.form-item label{
+width:200px;
+float:left;
+}
+.form-table th{
+   width:200px;
+   padding:0px;
+}
+.form-radios lable{
+  width:200px;
+float:right;
+}
+.form-table th{
+   width:200px;
+   padding:0px;
+}
+
+#edit-published-1-wrapper{
+    width:100px;
+}
+#edit-published-0-wrapper{
+    width:100px;
+}
+#edit-submit{
+    clear:both;
+    width:100px;
+    float:left;
+}
+.clear{
+    clear: both;
+}
+

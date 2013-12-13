@@ -1,0 +1,148 @@
+<?php
+// $Id$
+/**
+* This module enables a block which shows button-links
+* which allow users to subscribe to your feed in their
+* favorite RSS reader (Google, Bloglines, Newsgator,
+* Pluck, etc).
+*/
+
+
+/**
+ * Valid permissions for this module
+ * @return An array of valid permissions for the onthisdate module
+ */
+function feedbuttons_perm() {
+  return array('administer feedbuttons');
+} // function feedbuttons_perm()
+
+
+/**
+ * Declare the name of this block, later we'll generate HTML for the onthisdate block
+ * @param op the operation from the URL
+ * @param delta offset
+ * @returns block HTML
+ */
+function feedbuttons_block($op='list', $delta=0) {
+  global $base_url;
+  // listing of blocks, such as on the admin/block page
+  if ($op == "list") {
+    $block[0]["info"] = t("Subscribe Buttons");
+    return $block;
+  }
+  else if ($op == 'view') {
+    // our block content
+    // content variable that will be returned for display
+    $block_content = '';
+    $currentpage = 'http://'. $_SERVER['HTTP_HOST'] . request_uri();
+    $feedurl = variable_get('feedbuttons_feed_url', url('node/feed', array('absolute' => TRUE)));
+    if ($buttons = variable_get('feedbuttons_show_items', '')) {
+      foreach ($buttons as $button) {
+        if ($button === 'feediconlg') { $block_content .= '<a href="'. $feedurl .'"><img src="'.$base_url.'/'. drupal_get_path('module', 'feedbuttons') .'/buttons/feed-icon32x32.png" alt="Feed Icon" /></a><br />'; }
+        if ($button === 'feedicon') { $block_content .= '<a href="'. $feedurl .'"><img src="'.$base_url.'/'. drupal_get_path('module', 'feedbuttons') .'/buttons/feed-icon.gif" alt="Feed Icon" /></a><br />'; }
+        if ($button === 'xml') { $block_content .= '<a href="'. $feedurl .'"><img src="'.$base_url.'/'. drupal_get_path('module', 'feedbuttons') .'/buttons/xml.gif" alt="XML Icon" /></a><br />'; }
+        if ($button === 'google') { $block_content .= '<a href="http://fusion.google.com/add?feedurl='. $feedurl .'"><img src="'.$base_url.'/'. drupal_get_path('module', 'feedbuttons') .'/buttons/google-all.gif" alt="Google" /></a><br />'; }
+        if ($button === 'delicious') { $block_content .= '<a href="http://del.icio.us/post?url='. $currentpage .'"><img src="'.$base_url.'/'. drupal_get_path('module', 'feedbuttons') .'/buttons/delicious.gif" alt="Delicious" /></a><br />'; }
+        if ($button === 'yahoo') { $block_content .= '<a href="http://add.my.yahoo.com/rss?url='. $feedurl .'"><img src="'.$base_url.'/'. drupal_get_path('module', 'feedbuttons') .'/buttons/yahoo.gif" alt="Yahoo!" /></a><br />'; }
+        if ($button === 'bloglines') { $block_content .= '<a href="http://www.bloglines.com/sub/'. $feedurl .'"><img src="'.$base_url.'/'. drupal_get_path('module', 'feedbuttons') .'/buttons/bloglines.gif" alt="Bloglines" /></a><br />'; }
+        if ($button === 'newsgator') { $block_content .= '<a href="http://www.newsgator.com/ngs/subscriber/subext.aspx?url='. $feedurl .'"><img src="'.$base_url.'/'. drupal_get_path('module', 'feedbuttons') .'/buttons/newsgator.gif" alt="Newsgator" /></a><br />'; }
+        if ($button === 'msn') { $block_content .= '<a href="http://my.msn.com/addtomymsn.armx?id=rss&ut='. $feedurl .'"><img src="'.$base_url.'/'. drupal_get_path('module', 'feedbuttons') .'/buttons/msn.gif" alt="MSN" /></a><br />'; }
+        if ($button === 'feedster') { $block_content .= '<a href="http://www.feedster.com/myfeedster.php?action=addrss&rssurl='. $feedurl .'&confirm=no"><img src="'.$base_url.'/'. drupal_get_path('module', 'feedbuttons') .'/buttons/addmyfeedster.gif" alt="Feedster" /></a><br />'; }
+        if ($button === 'aol') { $block_content .= '<a href="http://feeds.my.aol.com/add.jsp?url='. $feedurl .'"><img src="'.$base_url.'/'. drupal_get_path('module', 'feedbuttons') .'/buttons/aol.gif" alt="AOL" /></a><br />'; }
+        if ($button === 'furl') { $block_content .= '<a href="http://www.furl.net/storeIt.jsp?u='. $feedurl .'"><img src="'.$base_url.'/'. drupal_get_path('module', 'feedbuttons') .'/buttons/furl.gif" alt="Furl" /></a><br />'; }
+        if ($button === 'rojo') { $block_content .= '<a href="http://www.rojo.com/add-subscription?resource='. $feedurl .'"><img src="'.$base_url.'/'. drupal_get_path('module', 'feedbuttons') .'/buttons/rojo.gif" alt="Rojo" /></a><br />'; }
+        if ($button === 'newsburst') { $block_content .= '<a href="http://www.newsburst.com/Source/?add='. $feedurl .'"><img src="'.$base_url.'/'. drupal_get_path('module', 'feedbuttons') .'/buttons/newsburst.gif" alt="Newsburst" /></a><br />'; }
+        if ($button === 'pluck') { $block_content .= '<a href="http://client.pluck.com/pluckit/prompt.aspx?GCID=C12286x053&a='. $feedurl .'"><img src="'.$base_url.'/'. drupal_get_path('module', 'feedbuttons') .'/buttons/pluck.png" alt="Pluck" /></a><br />'; }
+        if ($button === 'feedfeeds') { $block_content .= '<a href="http://www.feedfeeds.com/add?feed='. $feedurl .'"><img src="'.$base_url.'/'. drupal_get_path('module', 'feedbuttons') .'/buttons/addfeedfeeds.gif" alt="FeedFeeds" /></a><br />'; }
+        if ($button === 'addkinja') { $block_content .= '<a href="http://www.kinja.com/checksiteform.knj?pop=y&add='. $feedurl .'"><img src="'.$base_url.'/'. drupal_get_path('module', 'feedbuttons') .'/buttons/addkinja.gif" alt="Add Kinja" /></a><br />'; }
+        if ($button === 'solosub') { $block_content .= '<a href="http://solosub.com/sub/'. $feedurl .'"><img src="'.$base_url.'/'. drupal_get_path('module', 'feedbuttons') .'/buttons/solosub.gif" alt="SoloSub" /></a><br />'; }
+        if ($button === 'multirss') { $block_content .= '<a href="http://www.multirss.com/rss/'. $feedurl .'"><img src="'.$base_url.'/'. drupal_get_path('module', 'feedbuttons') .'/buttons/multirss.gif" alt="MultiRSS" /></a><br />'; }
+        if ($button === 'rmail') { $block_content .= '<a href="http://www.r-mail.org/bm.aspx?rss='. $feedurl .'"><img src="'.$base_url.'/'. drupal_get_path('module', 'feedbuttons') .'/buttons/rmail.jpg" alt="rMail" /></a><br />'; }
+        if ($button === 'rssfwd') { $block_content .= '<a href="http://www.rssfwd.com/rssfwd/preview?url='. $feedurl .'"><img src="'.$base_url.'/'. drupal_get_path('module', 'feedbuttons') .'/buttons/rssfwd.png" alt="RSSFwd" /></a><br />'; }
+        if ($button === 'blogarithm') { $block_content .= '<a href="http://www.blogarithm.com/subrequest.php?BlogURL='. $feedurl .'"><img src="'.$base_url.'/'. drupal_get_path('module', 'feedbuttons') .'/buttons/blogarithm.gif" alt="Blogarithm" /></a><br />'; }
+        if ($button === 'eskobo') { $block_content .= '<a href="http://www.eskobo.com/?AddToMyPage='. $feedurl .'"><img src="'.$base_url.'/'. drupal_get_path('module', 'feedbuttons') .'/buttons/eskobo.gif" alt="Eskobo" /></a><br />'; }
+        if ($button === 'gritwire') { $block_content .= '<a href="http://my.gritwire.com/feeds/addExternalFeed.aspx?FeedUrl='. $feedurl .'"><img src="'.$base_url.'/'. drupal_get_path('module', 'feedbuttons') .'/buttons/addToMyGritwire.gif" alt="GritWire" /></a><br />'; }
+        if ($button === 'botablog') { $block_content .= '<a href="http://www.botablog.com/botthisblog.php?blog='. $feedurl .'"><img src="'.$base_url.'/'. drupal_get_path('module', 'feedbuttons') .'/buttons/botablog.gif" alt="BotABlog" /></a><br />'; }
+        if ($button === 'monitorthis') { $block_content .= '<a href="http://immedi.at/accounts/discover?feed_url='. $feedurl .'"><img src="'.$base_url.'/'. drupal_get_path('module', 'feedbuttons') .'/buttons/monitor_this.png" alt="Monitor This" /></a><br />'; }
+        if ($button === 'simplify') { $block_content .= '<a href="http://www.simpy.com/simpy/LinkAdd.do?href='. $feedurl .'"><img src="'.$base_url.'/'. drupal_get_path('module', 'feedbuttons') .'/buttons/simpify-white-56x24.png" alt="Simplify" /></a><br />'; }
+      }
+    }
+
+    // check to see if there was any content before setting up the block
+    if ($block_content == '') {
+      // no content from a week ago, return nothing.
+      return;
+    }
+
+    // set up the block
+    $block['subject'] = variable_get('feedbuttons_block_title', 'Subscribe Buttons');
+    $block['content'] = $block_content;
+    return $block;
+  }
+} // end onthisdate_block
+
+/**
+ * Implementation of hook_settings().
+ */
+
+function feedbuttons_settings() {
+
+  $form['feedbuttons_block_title'] = array(
+    '#type' => 'textfield', '#title' => t('Block Title'), '#size' => 40, '#maxlength' => 64,
+    '#default_value' => variable_get('feedbuttons_block_title', 'Subscribe Buttons'),
+    '#description' => t('The title of the feeds block')
+  );
+
+  $form['feedbuttons_feed_url'] = array(
+    '#type' => 'textfield', '#title' => t('Feed URL'), '#size' => 40, '#maxlength' => 255,
+    '#default_value' => variable_get('feedbuttons_feed_url', url('node/feed', array('absolute' => TRUE))),
+    '#description' => t('The URL of your feed')
+  );
+
+  $form['feedbuttons_show_items'] = array(
+    '#type' => 'checkboxes',
+    '#title' => t('Show the following buttons in my block'),
+    '#default_value' => variable_get('feedbuttons_show_items', array('status', 'promote')),
+    '#options' => array(
+      'feediconlg' => t('<img src="'.$base_url.'/'. drupal_get_path('module', 'feedbuttons') .'/buttons/feed-icon32x32.png" alt="Feed Icon" />'),
+      'feedicon' => t('<img src="'.$base_url.'/'. drupal_get_path('module', 'feedbuttons') .'/buttons/feed-icon.gif" alt="Feed Icon" />'),
+      'xml' => t('<img src="'.$base_url.'/'. drupal_get_path('module', 'feedbuttons') .'/buttons/xml.gif" alt="XML Icon" />'),
+      'google' => t('<img src="'.$base_url.'/'. drupal_get_path('module', 'feedbuttons') .'/buttons/google-all.gif" alt="Google" />'),
+      'delicious' => t('<img src="'.$base_url.'/'. drupal_get_path('module', 'feedbuttons') .'/buttons/delicious.gif" alt="Delicious" />'),
+      'yahoo' => t('<img src="'.$base_url.'/'. drupal_get_path('module', 'feedbuttons') .'/buttons/yahoo.gif" alt="Yahoo!" />'),
+      'bloglines' => t('<img src="'.$base_url.'/'. drupal_get_path('module', 'feedbuttons') .'/buttons/bloglines.gif" alt="Bloglines" />'),
+      'newsgator' => t('<img src="'.$base_url.'/'. drupal_get_path('module', 'feedbuttons') .'/buttons/newsgator.gif" alt="Newsgator" />'),
+      'msn' => t('<img src="'.$base_url.'/'. drupal_get_path('module', 'feedbuttons') .'/buttons/msn.gif" alt="MSN" />'),
+      'feedster' => t('<img src="'.$base_url.'/'. drupal_get_path('module', 'feedbuttons') .'/buttons/addmyfeedster.gif" alt="Feedster" />'),
+      'aol' => t('<img src="'.$base_url.'/'. drupal_get_path('module', 'feedbuttons') .'/buttons/aol.gif" alt="AOL" />'),
+      'furl' => t('<img src="'.$base_url.'/'. drupal_get_path('module', 'feedbuttons') .'/buttons/furl.gif" alt="Furl" />'),
+      'rojo' => t('<img src="'.$base_url.'/'. drupal_get_path('module', 'feedbuttons') .'/buttons/rojo.gif" alt="Rojo" />'),
+      'newsburst' => t('<img src="'.$base_url.'/'. drupal_get_path('module', 'feedbuttons') .'/buttons/newsburst.gif" alt="Newsburst" />'),
+      'pluck' => t('<img src="'.$base_url.'/'. drupal_get_path('module', 'feedbuttons') .'/buttons/pluck.png" alt="Pluck" />'),
+      'feedfeeds' => t('<img src="'.$base_url.'/'. drupal_get_path('module', 'feedbuttons') .'/buttons/addfeedfeeds.gif" alt="FeedFeeds" />'),
+      'addkinja' => t('<img src="'.$base_url.'/'. drupal_get_path('module', 'feedbuttons') .'/buttons/addkinja.gif" alt="Add Kinja" />'),
+      'solosub' => t('<img src="'.$base_url.'/'. drupal_get_path('module', 'feedbuttons') .'/buttons/solosub.gif" alt="SoloSub" />'),
+      'multirss' => t('<img src="'.$base_url.'/'. drupal_get_path('module', 'feedbuttons') .'/buttons/multirss.gif" alt="MultiRSS" />'),
+      'rmail' => t('<img src="'.$base_url.'/'. drupal_get_path('module', 'feedbuttons') .'/buttons/rmail.jpg" alt="rMail" />'),
+      'rssfwd' => t('<img src="'.$base_url.'/'. drupal_get_path('module', 'feedbuttons') .'/buttons/rssfwd.png" alt="RSSFwd" />'),
+      'blogarithm' => t('<img src="'.$base_url.'/'. drupal_get_path('module', 'feedbuttons') .'/buttons/blogarithm.gif" alt="Blogarithm" />'),
+      'eskobo' => t('<img src="'.$base_url.'/'. drupal_get_path('module', 'feedbuttons') .'/buttons/eskobo.gif" alt="Eskobo" />'),
+      'gritwire' => t('<img src="'.$base_url.'/'. drupal_get_path('module', 'feedbuttons') .'/buttons/addToMyGritwire.gif" alt="GritWire" />'),
+      'botablog' => t('<img src="'.$base_url.'/'. drupal_get_path('module', 'feedbuttons') .'/buttons/botablog.gif" alt="BotABlog" />'),
+      'monitorthis' => t('<img src="'.$base_url.'/'. drupal_get_path('module', 'feedbuttons') .'/buttons/monitor_this.png" alt="Monitor This" />'),
+      'simplify' => t('<img src="'.$base_url.'/'. drupal_get_path('module', 'feedbuttons') .'/buttons/simpify-white-56x24.png" alt="Simplify" />'),
+     ),
+  );
+  return system_settings_form($form);
+}
+
+function feedbuttons_menu() {
+  $items['admin/settings/feedbuttons'] = array(
+    'title' => 'Feed Buttons settings',
+    'access arguments' => array('administer feedbuttons'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('feedbuttons_settings'),
+    'description' => t('Feed button settings.'),
+  );
+  return $items;
+}

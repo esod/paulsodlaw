@@ -1,0 +1,18 @@
+.form-table th{
+   width:200px;
+   padding:0px;
+}
+#edit-hdflvplayer-types-wrapper{
+    border-top: 1px solid #CCC;
+    border-bottom:  1px solid #CCC;
+    padding: 8px;
+}
+#edit-submit{
+    clear:both;
+    width:130px;
+    float:left;
+}
+.clear{
+    clear: both;
+}
+

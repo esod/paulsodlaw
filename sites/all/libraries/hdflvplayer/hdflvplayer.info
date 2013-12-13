@@ -1,0 +1,6 @@
+; $Id: hdflvplayer.info,v 1.0 Created by Vasanth at 2010/01/08 11:16:23 Exp $
+name = HDFLV Player
+description = Contus hdflvplayer used for play all kind of videos.
+package = Media
+core = 6.x
+version = 1.0

@@ -1,0 +1,21 @@
+/* $Id: linkedin.css,v 1.1.2.1 2010/05/13 12:29:36 bellesmanieres Exp $ */
+/* 
+    You can override this stylesheet by creating the file linkedin.css in your theme folder
+*/
+
+div.linkedin-specialties{
+  font-size:0.8em;
+  font-weight:bold;
+}
+div.linkedin-status {
+  margin-top:2em;
+  border-top:1px solid #eee;
+  font-weight:bold;
+  font-style:italic;
+}
+div.linkedin-status p.linkedin-submitted{
+  font-weight:normal;
+  margin-bottom:0;
+  font-style:normal;
+  font-size:0.9em;
+}

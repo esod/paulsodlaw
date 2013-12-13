@@ -1,0 +1,111 @@
+#title{
+    width:300px;
+    font-weight: bold;    
+    padding: 6px 0px;
+}
+h2{
+    width: 400px;   
+}
+#descriptionp{
+    margin:5px;
+    font-size: 12px;
+    font-family: sans-serif,arial;
+}
+#category{
+    float:right;
+}
+#select_title{
+    font-weight: bold;
+    font-family: sans-serif,arial;
+}
+#video_title{
+    font-weight: bold;
+    float:left;
+    font-size: 18px;
+    color: #48A5DF;
+    padding-bottom: 5px;
+    font-family: Arial;
+}
+#category select{
+    width:100px;
+}
+#thumb_title{    
+    width:180px;
+    text-align:left;
+    padding-left:10px;
+    font-weight:bold;   
+}
+#thumb_view{
+    text-align:left;
+    font-size: 11px;
+    padding-left:15px;
+}
+#thumb_title a{
+    font-weight: normal;
+    text-decoration: none;
+}
+#thumb{
+    float: left;
+margin-bottom: 15px;
+padding: 0px 8px;
+width: 150px;
+}
+#thumb_img{
+    background: url(../images/glow1.png);
+    width:151px;
+    display:block;
+    height: 98px;
+    text-decoration: none;
+}
+#thumb_img a{
+    text-decoration:none;
+}
+#thumb_img img{
+    width:130px;
+    height: 77px;    
+    padding: 10px 10px;
+}
+.table{
+    border:none;
+}
+#mediaspace{
+    margin:0px;
+    padding:0px;
+}
+.up{
+    background: url(../images/desUp.png) no-repeat;
+    cursor: pointer;
+    width:25px;
+    float: right;
+    text-indent:-999999px;
+    display: block;
+}
+.down{
+    background: url(../images/desDown.png) no-repeat;
+    cursor: pointer;
+    width:25px;
+    float: right;
+    text-indent:-999999px;
+    display: block;
+}
+.clear { clear:both; height:0px; font-size:0px;}
+.clearfix:after {
+    clear: both;
+    display: block;
+    content: " ";
+    height: 0px;
+    visibility: hidden;
+}
+.clearfix {
+    display: inline-block;
+}
+/* Hide these rules from IE-mac \*/
+* html .clearfix {
+    height: 1%;
+}
+.clearfix {
+    display: block;
+}
+li.clearfix {
+    display: list-item;
+}

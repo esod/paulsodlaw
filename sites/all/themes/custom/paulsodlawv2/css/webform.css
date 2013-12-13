@@ -1,0 +1,103 @@
+/* $Id: webform.css $ */
+
+/**
+ * @file
+ * Webform Styling
+ */
+
+/**
+ * Contact form
+ */
+
+.form-item {
+  display:inline;
+}
+
+#webform-component-name {
+  margin-top: 1em;
+}
+
+#webform-client-form-41 #edit-submitted-name-wrapper input.form-text {
+  height: 1.5em;
+  width: 85%;
+}
+
+#webform-component-phone {
+  display:inline;
+  float:left;
+  margin-top: 1em;
+}
+
+#webform-client-form-41 #edit-submitted-phone-wrapper input.form-text {
+  height: 1.5em;
+  width: 13em;
+}
+
+#webform-component-emailaddress {
+  display:inline;
+  float:left;
+  padding-left:1.5em;
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+#webform-client-form-41 #edit-submitted-emailaddress-wrapper input.form-text {
+  height: 1.5em;
+  width: 19em;
+}
+
+#webform-component-subject {
+  margin-top: 1em;
+  clear:both;
+}
+
+#webform-client-form-41 #edit-submitted-subject-wrapper input.form-text {
+  height: 1.5em;
+  width: 85%;
+}
+
+#webform-component-message {
+  margin-top: 1em;
+  margin-bottom: 1em;
+  clear:both;
+}
+
+#webform-client-form-41 #edit-submitted-message-wrapper input.form-textarea {
+  width: 85%;
+}
+
+#webform-component-disclaimer {
+  margin-bottom: 1em;
+  clear:both;
+}
+
+#webform-client-form-41 .form-checkboxes {
+  width: 90%;
+  margin: .25em 0 0 0;
+}
+
+#edit-submit {
+  height:30px;
+  color:#FFF;
+  font-weight: bold;
+  font-size: 14px;
+  background-color:#4f6ad7;
+  margin-top: 1em;
+  padding:3px 20px 3px 20px;
+  cursor: pointer;
+}
+#edit-mollom-captcha .description {
+  margin-bottom: 1em;
+  margin-right: 6em;
+}
+
+.message .resizable-textarea {
+  width: 38em;
+}
+
+.form-item .description /* The descriptive help text (separate from the label) */ {
+  font-size: 0.85em;
+  width: 40em;
+}
+
+

@@ -1,0 +1,26 @@
+/* $Id: views-styles.css,v 1.1 2009/08/12 04:25:15 johnalbin Exp $ */
+
+/**
+ * @file
+ * Views Styling
+ */
+
+/**
+ * Breaking News banner along the top of the page
+ * view = breaking_news
+ * views-slideshow--breaking-news--block-1.tpl.php
+ */
+.breaking-news {
+  margin-left: 75px;
+  margin-right: 50px;
+  margin-top: 6px;
+}
+
+.breaking-news a {
+  color: #FF9000;
+}
+
+.breaking-news a:hover {
+  color: #192666;
+}
+

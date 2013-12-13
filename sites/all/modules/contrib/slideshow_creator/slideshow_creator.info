@@ -1,0 +1,11 @@
+core            = '6.x'
+description     = Create true slideshows using any image over internet with many other features.
+name            = Slideshow Creator
+dependencies[]  = jquery_plugin
+
+; Information added by drupal.org packaging script on 2011-09-07
+version = "6.x-1.39"
+core = "6.x"
+project = "slideshow_creator"
+datestamp = "1315377128"
+

@@ -1,0 +1,210 @@
+<?php
+
+// $Id: hdflvplayer.install,v 1.0 Created by Vasanth at 2010/01/09 11:44:20 Exp $
+/*
+ * This file is contain list tables to be installed.
+ */
+/* * ************************************************* Implementation of hook_uninstall().*********************************************************** */
+
+function hdflvplayer_uninstall() {
+
+// Remove any saved variables.
+
+    db_query("DELETE FROM {variable} WHERE name LIKE 'hdflvplayer_%'");
+}
+
+/* * ************************************************* Set Tables and it Elements.******************************************************************** */
+
+function hdflvplayer_schema() {
+
+    /* Table hdflvplayer_node. */
+
+    $schema['hdflvplayer_node'] = array(
+        'description' => t('Stores node data'),
+        'fields' => array(
+            'nid' => array(
+                'description' => t('Node Id'),
+                'type' => 'int',
+                'not null' => FALSE,
+            ),
+            'config' => array(
+                'description' => t('Node configuration data'),
+                'type' => 'text',
+                'size' => 'medium',
+                'not null' => FALSE,
+            ),
+        ),
+    );
+
+    /* Table hdflvplayer_playlist. */
+
+    $schema['hdflvplayer_playlist'] = array(
+        'description' => t('for google ad sense.'),
+        'fields' => array(
+            'playid' => array('description' => t('The primary key.'), 'type' => 'serial', 'not null' => TRUE,),
+            'name' => array('type' => 'varchar', 'length' => '255', 'not null' => TRUE,),
+            'published' => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0, 'size' => 'tiny',),),
+        'primary key' => array('playid'),
+    );
+
+    /* Table hdflvplayerads. */
+
+    $schema['hdflvplayerads'] = array(
+        'description' => t('for google ad sense.'),
+        'fields' => array(
+            'id' => array('description' => t('The primary key.'), 'type' => 'serial', 'not null' => TRUE,),
+            'published' => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0, 'size' => 'tiny',),
+            'adsname' => array('type' => 'varchar', 'length' => '255', 'not null' => TRUE,),
+            'filepath' => array('type' => 'varchar', 'length' => '255', 'not null' => TRUE,),
+            'postvideopath' => array('type' => 'varchar', 'length' => '255', 'not null' => TRUE,),
+            'targeturl' => array('type' => 'varchar', 'length' => '255', 'not null' => TRUE,),
+            'clickurl' => array('type' => 'varchar', 'length' => '255', 'not null' => TRUE,),
+            'impressionurl' => array('type' => 'varchar', 'length' => '255', 'not null' => TRUE,),
+        ),
+        'primary key' => array('id'),
+    );
+
+    /* Table hdflvplayerlanguage. */
+
+    $schema['hdflvplayerlanguage'] = array(
+        'description' => t('for google ad sense.'),
+        'fields' => array(
+            'id' => array('description' => t('The primary key.'), 'type' => 'serial', 'not null' => TRUE,),
+            'published' => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0, 'size' => 'tiny',),
+            'play' => array('type' => 'varchar', 'length' => '255', 'not null' => TRUE,),
+            'pause' => array('type' => 'varchar', 'length' => '255', 'not null' => TRUE,),
+            'hdison' => array('type' => 'varchar', 'length' => '255', 'not null' => TRUE,),
+            'hdisoff' => array('type' => 'varchar', 'length' => '255', 'not null' => TRUE,),
+            'zoom' => array('type' => 'varchar', 'length' => '255', 'not null' => TRUE,),
+            'share' => array('type' => 'varchar', 'length' => '255', 'not null' => TRUE,),
+            'fullscreen' => array('type' => 'varchar', 'length' => '255', 'not null' => TRUE,),
+            'relatedvideos' => array('type' => 'varchar', 'length' => '255', 'not null' => TRUE,),
+            'sharetheword' => array('type' => 'varchar', 'length' => '255', 'not null' => TRUE,),
+            'sendanemail' => array('type' => 'varchar', 'length' => '255', 'not null' => TRUE,),
+            'to' => array('type' => 'varchar', 'length' => '255', 'not null' => TRUE,),
+            'from' => array('type' => 'varchar', 'length' => '255', 'not null' => TRUE,),
+            'send' => array('type' => 'varchar', 'length' => '255', 'not null' => TRUE,),
+            'copylink' => array('type' => 'varchar', 'length' => '255', 'not null' => TRUE,),
+            'copyembed' => array('type' => 'varchar', 'length' => '255', 'not null' => TRUE,),
+            'facebook' => array('type' => 'varchar', 'length' => '255', 'not null' => TRUE,),
+            'reddit' => array('type' => 'varchar', 'length' => '255', 'not null' => TRUE,),
+            'friendfeed' => array('type' => 'varchar', 'length' => '255', 'not null' => TRUE,),
+            'slashdot' => array('type' => 'varchar', 'length' => '255', 'not null' => TRUE,),
+            'delicious' => array('type' => 'varchar', 'length' => '255', 'not null' => TRUE,),
+            'myspace' => array('type' => 'varchar', 'length' => '255', 'not null' => TRUE,),
+            'wong' => array('type' => 'varchar', 'length' => '255', 'not null' => TRUE,),
+            'digg' => array('type' => 'varchar', 'length' => '255', 'not null' => TRUE,),
+            'blinklist' => array('type' => 'varchar', 'length' => '255', 'not null' => TRUE,),
+            'bebo' => array('type' => 'varchar', 'length' => '255', 'not null' => TRUE,),
+            'fark' => array('type' => 'varchar', 'length' => '255', 'not null' => TRUE,),
+            'tweet' => array('type' => 'varchar', 'length' => '255', 'not null' => TRUE,),
+            'furl' => array('type' => 'varchar', 'length' => '255', 'not null' => TRUE,),
+            'name' => array('type' => 'varchar', 'length' => '255', 'not null' => TRUE,),
+            'home' => array('type' => 'int', 'not null' => TRUE, 'default' => 0,),
+            'note' => array('type' => 'varchar', 'length' => '255', 'not null' => TRUE,),
+            'btnname' => array('type' => 'varchar', 'length' => '255', 'not null' => TRUE,),
+            'errormessage' => array('type' => 'varchar', 'length' => '255', 'not null' => TRUE,),
+        ),
+        'primary key' => array('id'),
+    );
+
+    /* Table hdflvplayerupload. */
+
+    $schema['hdflvplayerupload'] = array(
+        'description' => t('for google ad sense.'),
+        'fields' => array(
+            'id' => array('description' => t('The primary key.'), 'type' => 'serial', 'not null' => TRUE,),
+            'published' => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0, 'size' => 'tiny',),
+            'title' => array('type' => 'varchar', 'length' => '255', 'not null' => TRUE,),
+            'times_viewed' => array('type' => 'int', 'not null' => TRUE, 'default' => 0,),
+            'ffmpeg_videos' => array('type' => 'varchar', 'length' => '255', 'not null' => TRUE,),
+            'ffmpeg_thumbimages' => array('type' => 'varchar', 'length' => '255', 'not null' => TRUE,),
+            'ffmpeg_previewimages' => array('type' => 'varchar', 'length' => '255', 'not null' => TRUE,),
+            'ffmpeg_hd' => array('type' => 'varchar', 'length' => '255', 'not null' => TRUE,),
+            'filepath' => array('type' => 'varchar', 'length' => '255', 'not null' => TRUE,),
+            'videourl' => array('type' => 'varchar', 'length' => '255', 'not null' => TRUE,),
+            'thumburl' => array('type' => 'varchar', 'length' => '255', 'not null' => TRUE,),
+            'previewurl' => array('type' => 'varchar', 'length' => '255', 'not null' => TRUE,),
+            'hdurl' => array('type' => 'varchar', 'length' => '255', 'not null' => TRUE,),
+            'playlistid' => array('type' => 'int', 'not null' => TRUE, 'default' => 0,),
+            'duration' => array('type' => 'varchar', 'length' => '255', 'not null' => TRUE,),
+            'ordering' => array('type' => 'int', 'not null' => TRUE, 'default' => 0,),
+            'streamerpath' => array('type' => 'varchar', 'length' => '255', 'not null' => TRUE,),
+            'streameroption' => array('type' => 'varchar', 'length' => '255', 'not null' => TRUE,),
+            'postrollads' => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0, 'size' => 'tiny',),
+            'prerollads' => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0, 'size' => 'tiny',),
+            'description' => array('type' => 'text', 'not null' => TRUE,),
+            'targeturl' => array('type' => 'varchar', 'length' => '255', 'not null' => TRUE,),
+            'download' => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0, 'size' => 'tiny',),
+            'prerollid' => array('type' => 'int', 'not null' => TRUE, 'default' => 0,),
+            'postrollid' => array('type' => 'int', 'not null' => TRUE, 'default' => 0,),
+            'islive' => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0, 'size' => 'tiny',),
+        ),
+        'primary key' => array('id'),
+    );
+    return $schema;
+}
+
+/* Install hdflvplayer  tables. */
+
+function hdflvplayer_install() {
+
+    // Attempt to create the directory under sites/default/files.
+
+    $folder = "./sites/default/files/hdflvplayer";
+
+    if (!file_exists($folder)) {
+        if (!mkdir($folder)) {
+            drupal_set_message(t("Hdflv player could not create an output folder for
+                      Videos and images.  Please create the following output
+                      folder: sites/default/files/hdflvplayer, and make sure
+                      it has the appopriate permissions (chmod 777 if unsure)."));
+        }
+    }
+
+    $video = "./sites/default/files/hdflvplayer/videos";
+
+    if (!file_exists($video)) {
+        if (!mkdir($video)) {
+            drupal_set_message(t("Hdflv player could not create an output folder for
+                      Videos and images.  Please create the following output
+                      folder: sites/default/files/hdflvplayer/videos, and make sure
+                      it has the appopriate permissions (chmod 777 if unsure)."));
+        }
+    }
+
+    $thumb = "./sites/default/files/hdflvplayer/thumb";
+
+    if (!file_exists($thumb)) {
+        if (!mkdir($thumb)) {
+            drupal_set_message(t("Hdflv player could not create an output folder for
+                      Videos and images.  Please create the following output
+                      folder: sites/default/files/hdflvplayer/thumb, and make sure
+                      it has the appopriate permissions (chmod 777 if unsure)."));
+        }
+    }
+
+    $hd = "./sites/default/files/hdflvplayer/hdvideos";
+
+    if (!file_exists($hd)) {
+        if (!mkdir($hd)) {
+            drupal_set_message(t("Hdflv player could not create an output folder for
+                      Videos and images.  Please create the following output
+                      folder: sites/default/files/hdflvplayer/hdvideos, and make sure
+                      it has the appopriate permissions (chmod 777 if unsure)."));
+        }
+    }
+
+    $ads = "./sites/default/files/hdflvplayer/ads";
+
+    if (!file_exists($ads)) {
+        if (!mkdir($ads)) {
+            drupal_set_message(t("Hdflv player could not create an output folder for
+                      Videos and images.  Please create the following output
+                      folder: sites/default/files/hdflvplayer/ads, and make sure
+                      it has the appopriate permissions (chmod 777 if unsure)."));
+        }
+    }
+    // Create my tables.
+    drupal_install_schema('hdflvplayer');
+}

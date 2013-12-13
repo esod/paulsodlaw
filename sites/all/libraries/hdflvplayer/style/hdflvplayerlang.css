@@ -1,0 +1,15 @@
+.form-item {
+    margin-bottom: 1em;
+    margin-top: 1em;
+    width:400px;
+    float:left;
+
+}
+.form-item label {
+    display: block;
+    font-weight: bold;
+    clear: both;
+    float:left;
+    width:120px;
+}
+

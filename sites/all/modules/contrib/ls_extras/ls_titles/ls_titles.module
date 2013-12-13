@@ -1,0 +1,81 @@
+<?php
+// $Id:
+// Language Sections Titles module for Drupal.
+// License: http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+// Support: Commercial support and customization is available from www.netgenius.co.uk
+// Contact: www.netgenius.co.uk/contact or email drupal at netgenius.co.uk
+
+/*
+ * Process text, finding and removing title line if any.
+ * Called with $op='set' from language_sections_filter
+ * Called with $op='get' from other LS Titles module.
+ */
+function ls_titles_process($op, $text = FALSE, $format = FALSE, $id = FALSE) {
+  static $part;
+  static $saved;
+
+  // $saved is used because we typically get called twice, once to fetch title and once to fetch text.
+  // However the *order* of those calls depends on what is happening, e.g. node or block display etc.
+  switch ($op) {
+    case 'get':
+      // We were called directly from LS Extras function to fetch title.
+      // If format does not use LS, quick exit.
+      if (!language_sections_format_check($format))  return '!';
+      $id = ls_titles_get_id($text, $format);
+      // If this text has already been processed then the results are in $saved.
+      if (isset($saved) && $id == $saved['id']) {
+        $title = $saved['title'];
+      }
+      else {
+        $part = 'title';
+        // Get title by calling check_markup (which will call back here with $op == 'set' while $part == 'title').
+        // If filter format can be cached, use modified text to force title to be cached separately.
+        // NB: We must use filter_format_allowcache as that is what check_markup uses.
+        if (filter_format_allowcache($format)) {
+          $title = check_markup($text.' ', $format, FALSE);
+        }
+        else {
+          $title = check_markup($text, $format, FALSE);
+        }
+        $part = 'text';
+      }
+      // Remove tags (typically <p> wrapper added by other filters) and trim.
+      return trim(strip_tags($title));
+
+    case 'set':
+      // We were called from check_markup, either during basic filtering or via 'get:' above.
+      // If this text has already been processed then the results are in $saved.
+      if (isset($saved) && $id == $saved['id']) {
+        return $saved[$part];
+      }
+      else {
+        // $part will not be set if we were not called via 'get', so set it if necessary.
+        if (!isset($part))  $part = 'text';
+        $pattern = '/^title: *(.*)[\r\n]*/mi';
+        if (preg_match($pattern, $text, $matches, PREG_OFFSET_CAPTURE)) {
+          // Get title and remove the title line from the text.
+          $title = $matches[1][0];
+          $text = substr_replace($text, '', $matches[0][1], strlen($matches[0][0]));
+        }
+        else {
+          // No title found, return '!' to distinguish from title: <blank>
+          $title = '!';
+        }
+        // Save results for the expected second call.
+        // @todo Remove if ($id) check - only there for older versions of LS which don't pass it.
+        if ($id)  $saved = compact('id', 'title', 'text');
+        return $saved[$part];
+      }
+    default:
+  }
+}
+
+/*
+ * Get an id based on text content, format and current language.
+ * For best results, this must use the same format as check_markup (with language-patch applied)
+ * See http://api.drupal.org/api/function/check_markup
+ */
+function ls_titles_get_id($text, $format) {
+  $langcode = $GLOBALS['language']->language;
+  return sprintf('%s:%s:%s', $format, $langcode, md5($text));
+}

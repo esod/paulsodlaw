@@ -1,0 +1,9 @@
+; $Id: adminmarine.info,v 1.4 2007/06/08 05:50:57 esod Exp $
+name = Admin marine
+description = Custom admin theme for themightybyte.com.
+version = VERSION
+core = 6.x
+engine = phptemplate
+stylesheets[all][] = style.css
+stylesheets[print][] = print.css
+stylesheets[print][] = style-rtl.css
